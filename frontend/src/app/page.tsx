@@ -25,11 +25,19 @@ export default function HomePage() {
         <div className="mt-10">
           <a 
             href="/upload" 
-            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  transition-all duration-300 bg-gradient-to-r from-indigo-500 to-purple-500"
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  transition-all duration-300 bg-gradient-to-r from-indigo-500 to-purple-500 "
           >
             Get Started
             <ArrowRight className="ml-2 h-5 w-5" />
           </a>
+
+          {/* <a 
+            href="/login" 
+            className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  transition-all duration-300 bg-gradient-to-r from-purple-500 to-pink-500"
+          >
+            Login
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </a> */}
         </div>
       </div>
     </main>
