@@ -76,14 +76,14 @@ export default function ResumeBuilder() {
     <main className="min-h-screen p-4 sm:p-8 font-sans bg-gray-50 print:bg-white print:p-0">
       <div className="container mx-auto max-w-7xl print:max-w-none print:w-full print:m-0">
         <header className="text-center mb-10 print:hidden">
-          <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight">AI Resume Builder</h1>
-          <p className="mt-2 text-gray-600">Fill in your details, and we'll format a professional resume for you.</p>
+          <h1 className="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">AI Resume Builder</h1>
+          <p className="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">Fill in your details, and we'll format a professional resume for you.</p>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 print:block">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 print:block ">
           
           {/* --- LEFT: INPUT FORM (Hidden during print) --- */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-fit print:hidden">
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 h-fit print:hidden glass-card-purple">
             <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center border-b pb-2">
               <Wand2 className="w-5 h-5 mr-2 text-indigo-600"/> Input Details
             </h2>
@@ -175,7 +175,7 @@ export default function ResumeBuilder() {
                  <textarea {...register("achievementsRaw")} placeholder="Hackathon wins, certifications, leadership roles..." className="input-field h-20" />
               </div>
 
-              <button type="submit" disabled={isLoading} className="w-full py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition flex justify-center items-center shadow-md disabled:bg-indigo-300">
+              <button type="submit" disabled={isLoading} className="w-full flex items-center justify-center py-4 px-6 border-transparent rounded-xl shadow-sm text-lg font-semibold  bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 bg-gradient-to-r from-indigo-500 to-purple-500 text-white cursor-pointer">
                 {isLoading ? <Loader className="animate-spin mr-2"/> : <Wand2 className="mr-2"/>} 
                 Generate Resume
               </button>
@@ -183,7 +183,7 @@ export default function ResumeBuilder() {
           </div>
 
           {/* --- RIGHT: LIVE PREVIEW --- */}
-          <div className="bg-gray-100 p-4 rounded-2xl flex flex-col items-center print:bg-white print:p-0 print:block">
+          <div className="bg-gray-100 p-4 rounded-2xl flex flex-col items-center print:bg-white print:p-0 print:block glass-card-purple">
             <div className="w-full flex justify-between items-center mb-4 print:hidden">
               <h2 className="text-xl font-semibold text-gray-700">Resume Preview</h2>
               {generatedResume && (

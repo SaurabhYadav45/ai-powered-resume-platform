@@ -6,7 +6,14 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
+const model = genAI.getGenerativeModel({ model: "Gemini 2.0 Flash" });
+
+
+// --- OPENAI CONFIGURATION (ACTIVE) ---
+// const OpenAI = require("openai");
+// const openai = new OpenAI({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
 
 const aiAnalysis = {
   analyze: async (resumeText, jobDescription) => {
