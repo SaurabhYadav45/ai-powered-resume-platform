@@ -47,4 +47,9 @@ router.get('/history', protect, resumeController.getHistory);
 // @access  Public
 router.post('/generate-cover-letter', resumeController.generateCoverLetter);
 
+// @route   POST /api/resume/build
+// @desc    Generate professional resume content from raw data
+// @access  Public (or Private if you want)
+router.post('/build', resumeController.buildResume);
+
 module.exports = router;

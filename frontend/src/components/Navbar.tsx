@@ -1,20 +1,19 @@
 "use client";
 
 import React, { useState } from 'react';
-import { FileText, LogOut, History, Menu, X } from 'lucide-react';
-// Corrected path to use Next.js alias
-import { useAuth } from '@/hooks/useAuth';
+import { FileText, LogOut, History, Menu, X, Hammer } from 'lucide-react';
+// Corrected relative path to ensure the module is found
+import { useAuth } from '../hooks/useAuth';
 
 /**
- * Navbar Component (with Glassmorphism)
- * @description A responsive navigation bar with a frosted glass effect.
+ * Navbar Component (with Glassmorphism & Builder Link)
+ * @description A responsive navigation bar with a frosted glass effect and links to Analyze, Builder, and History.
  */
 export const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    // UPDATED: Replaced 'bg-white shadow-sm' with 'glass-card'
     <nav className="glass-card sticky top-0 z-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -22,7 +21,7 @@ export const Navbar = () => {
           <div className="flex-shrink-0">
             <a href="/" className="flex items-center space-x-2 text-indigo-600 hover:text-indigo-800 transition-colors">
               <FileText className="h-8 w-8" />
-              <span className="text-xl md:text-2xl font-bold tracking-tight ">ResuMate</span>
+              <span className="text-xl md:text-2xl font-bold tracking-tight">ResuMate</span>
             </a>
           </div>
 
@@ -31,6 +30,12 @@ export const Navbar = () => {
             <a href="/upload" className="text-gray-700 hover:bg-white/30 px-3 py-2 rounded-md text-sm font-medium">
               Analyze
             </a>
+            {/* NEW: Builder Link */}
+            <a href="/builder" className="flex items-center text-gray-700 hover:bg-white/30 px-3 py-2 rounded-md text-sm font-medium">
+              Builder
+              {/* <Hammer className="mr-2 h-4 w-4" /> */}
+            </a>
+
             {isLoggedIn ? (
               <>
                 <a href="/history" className="flex items-center text-gray-700 hover:bg-white/30 px-3 py-2 rounded-md text-sm font-medium">
@@ -65,6 +70,10 @@ export const Navbar = () => {
           <a href="/upload" className="text-gray-700 hover:bg-white/30 block px-3 py-2 rounded-md text-base font-medium">
             Analyze
           </a>
+          <a href="/builder" className="text-gray-700 hover:bg-white/30 block px-3 py-2 rounded-md text-base font-medium">
+            Builder
+          </a>
+          
           {isLoggedIn ? (
             <>
               <a href="/history" className="text-gray-700 hover:bg-white/30 block px-3 py-2 rounded-md text-base font-medium">

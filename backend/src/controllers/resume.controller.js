@@ -84,6 +84,20 @@ const resumeController = {
       console.error('--- [Cover Letter Error] ---', error);
       res.status(500).json({ message: 'Server error while generating cover letter.' });
     }
+  },
+
+  buildResume: async (req, res) => {
+    const userData = req.body;
+    if (!userData) {
+      return res.status(400).json({ message: 'User data is required.' });
+    }
+    try {
+      const polishedContent = await aiAnalysis.buildResumeContent(userData);
+      res.status(200).json({ polishedContent });
+    } catch (error) {
+      console.error('--- [Resume Builder Error] ---', error);
+      res.status(500).json({ message: 'Server error while building resume.' });
+    }
   }
 };
 
