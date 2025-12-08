@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 // Using Next.js path aliases (@/) which are configured to point to the `src` directory.
 import { Navbar } from '@/components/Navbar';
+import { Footer } from '@/components/Footer';
 import '@/app/globals.css';
 
 export const metadata: Metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({
       <body className="font-sans" suppressHydrationWarning={true}>
         <Navbar />
         <main>{children}</main>
+        <Footer></Footer>
       </body>
     </html>
   );
