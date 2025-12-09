@@ -45,7 +45,7 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center" style={{ fontFamily: theme.font }}>
+    <div className="min-h-screen  py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center" style={{ fontFamily: theme.font }}>
       {/* Import Font */}
       <style>
         {`@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap');`}

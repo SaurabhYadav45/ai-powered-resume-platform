@@ -2,8 +2,10 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
-import { Loader, Wand2, Printer, Plus, Trash2 } from 'lucide-react';
+import { Loader, Wand2, Printer, Plus, Trash2, Download } from 'lucide-react';
 import axios from 'axios';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 
 // IMPORT ALL TEMPLATES
 import { ModernTemplate, ResumeData } from '../../components/templates/ModernTemplate';
@@ -132,6 +134,70 @@ export default function ResumeBuilder() {
     window.print();
   };
 
+  const handleDownloadPDF = async () => {
+    if (!resumeRef.current) return;
+
+    try {
+      // Show loading state
+      const printButton = document.querySelector('.print-button');
+      if (printButton) {
+        printButton.innerHTML = '<svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Generating...';
+      }
+
+      // Use html2canvas to capture the resume
+      const canvas = await html2canvas(resumeRef.current, {
+        scale: 2, // Higher quality
+        useCORS: true,
+        logging: false,
+      });
+
+      // Convert to PDF using jsPDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+        compress: true
+      });
+
+      // Calculate dimensions
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add image to PDF
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      // Add additional pages if needed
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Download the PDF
+      pdf.save(`${liveData.fullName || 'resume'}_Resume.pdf`);
+
+      // Restore button text
+      if (printButton) {
+        printButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download PDF';
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+      
+      // Restore button text
+      const printButton = document.querySelector('.print-button');
+      if (printButton) {
+        printButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download PDF';
+      }
+    }
+  };
+
   // --- THE SWITCH LOGIC ---
   const renderTemplate = () => {
     if (selectedTemplate.startsWith('creative')) {
@@ -256,9 +322,20 @@ export default function ResumeBuilder() {
         <div className="glass-card-purple p-4 rounded-2xl flex flex-col items-center print:bg-white print:p-0 print:block">
           <div className="w-full flex justify-between items-center mb-4 print:hidden">
             <h2 className="text-xl font-semibold text-gray-700">Live Preview</h2>
-            <button onClick={handlePrint} className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 flex items-center shadow-sm">
-              <Printer className="w-4 h-4 mr-2"/> Print / PDF
-            </button>
+            <div className="flex gap-2">
+              <button 
+                onClick={handlePrint} 
+                className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 flex items-center shadow-sm"
+              >
+                <Printer className="w-4 h-4 mr-2"/> Print
+              </button>
+              <button 
+                onClick={handleDownloadPDF} 
+                className="print-button bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center shadow-sm"
+              >
+                <Download className="w-4 h-4 mr-2"/> Download PDF
+              </button>
+            </div>
           </div>
 
           <div className="overflow-auto w-full flex justify-center print:overflow-visible print:w-full print:block print:m-0">
@@ -297,6 +374,15 @@ export default function ResumeBuilder() {
           .shadow-2xl { box-shadow: none !important; }
           .print-content { margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; }
           a { text-decoration: none !important; color: #1e40af !important; }
+        }
+      `}</style>
+      <style jsx global>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        .animate-spin {
+          animation: spin 1s linear infinite;
         }
       `}</style>
     </div>

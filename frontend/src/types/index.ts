@@ -16,6 +16,18 @@ export interface AnalysisResult {
   formattingFeedback: string;
   suggestions: string[];
   keywordFrequency: { keyword: string; count: number }[];
+  atsScore: number;
+  atsOptimizationTips: string[];
+  impactScore: number;
+  actionVerbsScore: number;
+  contentRelevance: number;
+  lengthScore: number;
+  industryBenchmark: {
+    avgSkillsMatch: number;
+    avgAtsScore: number;
+    avgImpactScore: number;
+    topKeywords: string[];
+  };
 }
 
 // NEW: Type for the entire response from the /analyze endpoint

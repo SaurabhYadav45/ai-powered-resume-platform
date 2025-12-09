@@ -37,6 +37,9 @@ export const Navbar = () => {
             <a href="/templates" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
               <LayoutTemplate className="mr-2 h-4 w-4" /> Templates
             </a>
+            <a href="/pricing" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+              <IndianRupee className="mr-2 h-4 w-4" /> Pricing
+            </a>
 
             {isLoggedIn ? (
               <>
@@ -78,6 +81,9 @@ export const Navbar = () => {
           {/* NEW: Templates Link */}
           <a href="/templates" className="text-gray-700 hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
             Templates
+          </a>
+          <a href="/pricing" className="text-gray-700 hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
+            Pricing
           </a>
           
           {isLoggedIn ? (

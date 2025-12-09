@@ -66,13 +66,41 @@ const aiAnalysis = {
       2.  Do not include any text, explanations, or markdown formatting (like \`\`\`json) outside of the JSON object.
       3.  **CRITICAL:** Keep the "suggestions" EXTREMELY concise. Maximum 15 words per bullet point. Get straight to the point (e.g., "Add metrics to your sales achievements." instead of "You should try to add more numbers to your sales...").
 
+      **Enhanced Analysis Requirements:**
+      For "formattingFeedback", provide specific, actionable feedback on:
+      - Layout and visual hierarchy (margins, spacing, alignment)
+      - Font consistency and sizing
+      - Section organization and flow
+      - Use of bold/italics for emphasis
+      - ATS compatibility (avoid columns, tables, headers/footers)
+      
+      For "suggestions", focus on these high-impact areas:
+      - Quantifying achievements with specific metrics (% increases, $ savings, team sizes)
+      - Using stronger, more specific action verbs
+      - Tailoring the professional summary to match target roles
+      - Optimizing keyword placement for ATS
+      - Improving bullet point structure and impact
+      
+      For "missingSkills", identify critical technical and soft skills that:
+      - Are commonly required in the candidate's field
+      - Would significantly strengthen their profile
+      - Are mentioned in the job description but absent from resume
+      - Could be added without fabrication
+
       **JSON Output Structure:**
       {
         "skillsMatch": <A percentage (number from 0-100) representing how well the resume's skills and experience align with the job description. If no job description is provided, estimate a general score based on the resume's overall quality and clarity for a generic role in its likely field.>,
         "missingSkills": <An array of 3-5 specific, high-impact skills or qualifications mentioned in the job description that are completely missing from the resume. If no job description, suggest 3-5 generally valuable skills for the candidate's likely career path.>,
         "formattingFeedback": <A single string of concise, professional feedback on the resume's formatting. Comment on readability, use of white space, consistency, and overall layout.>,
         "suggestions": <An array of 3-4 powerful, actionable suggestions for improvement. Focus on high-impact areas like quantifying achievements with metrics (e.g., "Increased sales by 20%"), using stronger action verbs, and tailoring the professional summary. REMEMBER: Keep these short (under 15 words).>,
-        "keywordFrequency": <An array of the top 5-7 most frequent and relevant professional keywords (technical skills, software, methodologies) found in the resume, along with their counts. Format as {"keyword": "KeywordName", "count": <number>}.>
+        "keywordFrequency": <An array of the top 5-7 most frequent and relevant professional keywords (technical skills, software, methodologies) found in the resume, along with their counts. Format as {"keyword": "KeywordName", "count": <number>}.>,
+        "atsScore": <A percentage (number from 0-100) estimating how well the resume will perform against Applicant Tracking Systems. Consider factors like keyword optimization, proper formatting, and absence of elements that could confuse ATS.>,
+        "atsOptimizationTips": <An array of 3-4 specific, actionable tips for optimizing the resume for Applicant Tracking Systems. Focus on concrete actions like "Incorporate X keyword from the job description" or "Replace 'team player' with 'cross-functional collaboration'".>,
+        "impactScore": <A percentage (number from 0-100) evaluating how well the candidate quantifies their accomplishments with metrics and demonstrates impact.>,
+        "actionVerbsScore": <A percentage (number from 0-100) assessing the strength and variety of action verbs used throughout the resume.>,
+        "contentRelevance": <A percentage (number from 0-100) measuring how well the experience aligns with typical requirements for the candidate's likely career field.>,
+        "lengthScore": <A percentage (number from 0-100) evaluating if the resume length is appropriate (typically 1-2 pages for most professionals).>,
+        "industryBenchmark": <An object containing benchmark data for comparison. Include: {"avgSkillsMatch": <number 0-100>, "avgAtsScore": <number 0-100>, "avgImpactScore": <number 0-100>, "topKeywords": ["keyword1", "keyword2", "keyword3"]}. Estimate realistic averages for the candidate's field.>
       }
     `;
 
@@ -145,13 +173,25 @@ const aiAnalysis = {
       """
 
       **Task:**
-      Write a professional, concise, and impactful cover letter. Follow these instructions precisely:
-      1.  **Structure:** The cover letter should have three to four paragraphs.
-      2.  **Introduction:** Start with a strong opening that grabs the reader's attention and clearly states the position being applied for.
-      3.  **Body Paragraphs:** In the body, do not just repeat the resume. Instead, highlight 2-3 key experiences or skills from the resume and directly connect them to the most important requirements listed in the job description. Use specific examples.
-      4.  **Closing:** Conclude with a confident closing that reiterates interest in the role and includes a clear call to action (e.g., "I am eager to discuss how my skills in [Key Skill] can benefit your team.").
-      5.  **Tone:** Maintain a professional, confident, and enthusiastic tone throughout.
-      6.  **Output:** Your response should be only the text of the cover letter. Do not include any extra headings, titles, or explanations.
+      Write a professional, concise, and impactful cover letter tailored specifically to this candidate and role. Follow these instructions precisely:
+      
+      **Structure Requirements:**
+      1.  **Header:** Begin with the candidate's contact information aligned left, followed by the date, then the employer's contact information.
+      2.  **Salutation:** Use "Dear Hiring Manager" if no specific name is provided, or "Dear [Name]" if available.
+      3.  **Opening Paragraph:** Start with a powerful hook that connects the candidate's background to the company's needs. Clearly state the position being applied for.
+      4.  **Body Paragraphs (1-2):** Highlight 2-3 specific achievements or experiences from the resume that directly address key requirements in the job description. Use quantifiable results whenever possible.
+      5.  **Closing Paragraph:** Reinforce the candidate's fit for the role, express enthusiasm for contributing to the company, and include a clear call to action for an interview.
+      6.  **Sign-off:** Use professional closing ("Sincerely," "Best regards,") followed by the candidate's name.
+      
+      **Content Guidelines:**
+      - Personalize the letter to show research about the company and role
+      - Quantify achievements with specific metrics when possible
+      - Use strong action verbs and confident language
+      - Address the company's pain points and how the candidate solves them
+      - Keep the tone professional yet personable
+      - Limit to 300-400 words (approximately 3/4 page)
+      
+      **Output:** Your response should be only the complete text of the cover letter with proper formatting. Do not include any extra headings, titles, or explanations.
     `;
 
     try {

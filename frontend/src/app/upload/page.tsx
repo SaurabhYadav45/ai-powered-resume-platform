@@ -9,6 +9,11 @@ import { Upload, FileText, Briefcase, Loader, ServerCrash, Wand2, Copy } from 'l
 // Corrected paths to use Next.js style aliases (@/)
 import { SkillChart } from '@/components/SkillChart';
 import { ResultCard } from '@/components/ResultCard';
+import { DetailedScores } from '@/components/DetailedScores';
+import { ScoreCard } from '@/components/ScoreCard';
+import { OverallAssessment } from '@/components/OverallAssessment';
+import { AtsTips } from '@/components/AtsTips';
+import { IndustryBenchmark } from '@/components/IndustryBenchmark';
 import { analyzeResumeApi, generateCoverLetterApi } from '@/utils/api';
 import { AnalysisResult, FormValues } from '@/types';
 
@@ -187,9 +192,26 @@ export default function UploadPage() {
           {analysisResult && (
             <div className="max-w-6xl mx-auto animate-fade-in space-y-8">
               <h2 className="text-3xl font-bold text-center  bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">Analysis Results</h2>
+              <OverallAssessment analysis={analysisResult} />
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 <div className="lg:col-span-2"><SkillChart data={analysisResult.keywordFrequency} /></div>
                 <ResultCard title="Skills Match" content={`${analysisResult.skillsMatch}%`} />
+              </div>
+              <div className="grid grid-cols-1 gap-8">
+                <DetailedScores analysis={analysisResult} />
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <ScoreCard title="ATS Score" score={analysisResult.atsScore} />
+                <ScoreCard title="Impact Score" score={analysisResult.impactScore} />
+                <ScoreCard title="Action Verbs Score" score={analysisResult.actionVerbsScore} />
+                <ScoreCard title="Content Relevance" score={analysisResult.contentRelevance} />
+                <ScoreCard title="Length Score" score={analysisResult.lengthScore} />
+              </div>
+              <div className="grid grid-cols-1 gap-8">
+                <IndustryBenchmark analysis={analysisResult} />
+              </div>
+              <div className="grid grid-cols-1 gap-8">
+                <AtsTips tips={analysisResult.atsOptimizationTips} />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <ResultCard title="Formatting Feedback" content={analysisResult.formattingFeedback} />
