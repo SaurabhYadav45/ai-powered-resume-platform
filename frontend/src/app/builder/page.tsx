@@ -74,7 +74,7 @@ export default function ResumeBuilder() {
   const onSubmit: SubmitHandler<ResumeFormData> = async (data) => {
     setIsLoading(true);
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5001/api';
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
       const response = await axios.post(`${API_BASE_URL}/resume/build`, data);
       
       const polished = response.data.polishedContent;
