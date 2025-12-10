@@ -395,7 +395,7 @@ export const generateHighQualityPDF = async (template: Template, resumeData?: Re
     const pdfBytes = await pdfDoc.save();
     
     // Create a Blob and download the PDF
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const blob = new Blob([new Uint8Array(pdfBytes)], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
