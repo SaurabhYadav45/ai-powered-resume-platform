@@ -18,6 +18,23 @@ export default function HomePage() {
          .font-rubik {
            font-family: 'Rubik', sans-serif;
          }
+         
+         /* Continuous flip animation */
+         .flip-card-inner {
+           animation: continuousFlip 8s infinite ease-in-out;
+         }
+         
+         @keyframes continuousFlip {
+           0%, 45% {
+             transform: rotateY(0deg);
+           }
+           55%, 95% {
+             transform: rotateY(180deg);
+           }
+           100% {
+             transform: rotateY(0deg);
+           }
+         }
        `}</style>
 
        {/* Background Elements */}
@@ -88,7 +105,7 @@ export default function HomePage() {
             </div>
 
             {/* --- RIGHT COLUMN: Visuals --- */}
-            <div className="relative z-0 hidden lg:block perspective-1000 group h-[600px] w-full max-w-lg mx-auto cursor-pointer">
+            <div className="relative z-0 hidden lg:block perspective-1000 h-[600px] w-full max-w-lg mx-auto cursor-pointer">
                {/* Decorative Glow */}
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
 
@@ -105,9 +122,9 @@ export default function HomePage() {
                              className="w-full h-full object-cover rounded-xl"
                            />
                            {/* Hint Badge */}
-                           <div className="absolute bottom-8 right-8 bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 animate-bounce">
+                           <div className="absolute bottom-8 right-8 bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3">
                               <Wand2 className="w-5 h-5 text-indigo-600" />
-                              <div className="text-xs font-bold text-gray-800">Hover to Optimize</div>
+                              <div className="text-xs font-bold text-gray-800">Auto-Optimizing</div>
                            </div>
                         </div>
                      </div>

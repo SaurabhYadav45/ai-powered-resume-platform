@@ -26,35 +26,41 @@ export const Navbar = () => {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-baseline space-x-4">
-            <a href="/upload" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
-              <Brain className="mr-2 h-4 w-4" /> Analyze
-            </a>
-            {/* NEW: Builder Link */}
-            <a href="/builder" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
-              <FilePen className="mr-2 h-4 w-4" /> Builder
-            </a>
-            <a href="/templates" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
-              <LayoutTemplate className="mr-2 h-4 w-4" /> Templates
-            </a>
-            <a href="/pricing" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
-              <IndianRupee className="mr-2 h-4 w-4" /> Pricing
-            </a>
-
-            {isLoggedIn ? (
-              <>
-                <a href="/history" className="flex items-center text-gray-700 hover:bg-purple-200px-3 py-2 rounded-md text-sm font-medium">
-                  <History className="mr-2 h-4 w-4" /> History
-                </a>
-                <button onClick={logout} className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
-                  <LogOut className="mr-2 h-4 w-4" /> Logout
-                </button>
-              </>
-            ) : (
-              <a href="/login" className=" flex items-center text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-200">
-                <LogIn className="mr-2 h-4 w-4" /> Login
+          <div className="hidden lg:flex items-center justify-between flex-1">
+            {/* Center Navigation Items */}
+            <div className="flex items-center justify-center space-x-4 flex-1">
+              <a href="/upload" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+                <Brain className="mr-2 h-4 w-4" /> Analyze
               </a>
-            )}
+              {/* NEW: Builder Link */}
+              <a href="/builder" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+                <FilePen className="mr-2 h-4 w-4" /> Builder
+              </a>
+              <a href="/templates" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+                <LayoutTemplate className="mr-2 h-4 w-4" /> Templates
+              </a>
+              <a href="/pricing" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+                <IndianRupee className="mr-2 h-4 w-4" /> Pricing
+              </a>
+            </div>
+
+            {/* Right-aligned Auth Items */}
+            <div className="flex items-center space-x-2">
+              {isLoggedIn ? (
+                <>
+                  <a href="/history" className="flex items-center text-gray-700 hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+                    <History className="mr-2 h-4 w-4" /> History
+                  </a>
+                  <button onClick={logout} className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex items-center hover:bg-purple-200 px-3 py-2 rounded-md text-sm font-medium">
+                    <LogOut className="mr-2 h-4 w-4" /> Logout
+                  </button>
+                </>
+              ) : (
+                <a href="/login" className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white flex items-center text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-200">
+                  <LogIn className="mr-2 h-4 w-4" /> Login
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Hamburger Menu Button */}
@@ -91,12 +97,12 @@ export const Navbar = () => {
               <a href="/history" className="text-gray-700 hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
                 History
               </a>
-              <button onClick={logout} className="w-full text-left text-gray-700 hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
+              <button onClick={logout} className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white w-full text-left text-gray-700 hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
                 Logout
               </button>
             </>
           ) : (
-            <a href="/login" className="text-gray-700 hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
+            <a href="/login" className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:bg-purple-200 block px-3 py-2 rounded-md text-base font-medium">
               Login
             </a>
           )}

@@ -35,18 +35,18 @@ export const SimpleTemplate = ({ data }: { data: ResumeData }) => {
     <div className="bg-white text-[#000000] p-[15mm] box-border h-full" style={{ fontFamily: 'Arial, Helvetica, sans-serif', fontSize: '11pt' }}>
       {/* Simple Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-[#000000] mb-1">{data.fullName || "Your Name"}</h1>
+        <h1 className="text-4xl font-bold text-[#000000] mb-1">{data.fullName || "Your Name"}</h1>
         <div className="text-sm text-[#374151] flex flex-wrap gap-4 mt-2">
-          {data.email && <span className="flex items-center gap-1"><Mail className="w-4 h-4"/> {data.email}</span>}
-          {data.phone && <span className="flex items-center gap-1"><Phone className="w-4 h-4"/> {data.phone}</span>}
+          {data.email && <span className="flex items-center gap-1"><Mail className="w-4 h-4 flex-shrink-0" /> {data.email}</span>}
+          {data.phone && <span className="flex items-center gap-1"><Phone className="w-4 h-4 flex-shrink-0" /> {data.phone}</span>}
           {data.linkedin && (
             <a href={data.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#1e40af] hover:underline">
-              <Linkedin className="w-4 h-4"/> LinkedIn
+              <Linkedin className="w-4 h-4 flex-shrink-0" /> LinkedIn
             </a>
           )}
           {data.github && (
             <a href={data.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#1e40af] hover:underline">
-              <Github className="w-4 h-4"/> GitHub
+              <Github className="w-4 h-4 flex-shrink-0" /> GitHub
             </a>
           )}
         </div>
@@ -104,12 +104,12 @@ export const SimpleTemplate = ({ data }: { data: ResumeData }) => {
                     <div className="text-xs text-[#1e40af] flex gap-3">
                       {proj.link && (
                         <a href={proj.link} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
-                          Live <ExternalLink className="w-3 h-3"/>
+                          Live <ExternalLink className="w-3 h-3 flex-shrink-0"/>
                         </a>
                       )}
                       {proj.repo && (
                         <a href={proj.repo} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
-                          Code <Code className="w-3 h-3"/>
+                          Code <Code className="w-3 h-3 flex-shrink-0"/>
                         </a>
                       )}
                     </div>

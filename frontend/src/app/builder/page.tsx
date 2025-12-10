@@ -12,6 +12,8 @@ import { ModernTemplate, ResumeData } from '../../components/templates/ModernTem
 import { SimpleTemplate } from '../../components/templates/SimpleTemplate';
 import { CreativeTemplate } from '../../components/templates/CreativeTemplate';
 import { TraditionalTemplate } from '../../components/templates/TraditionalTemplate';
+// Import our new PDF generator
+import { generateHighQualityPDF } from '../../utils/pdfGenerator';
 
 // Reuse the interface from the template component to ensure type safety
 type ResumeFormData = ResumeData;
@@ -135,8 +137,6 @@ export default function ResumeBuilder() {
   };
 
   const handleDownloadPDF = async () => {
-    if (!resumeRef.current) return;
-
     try {
       // Show loading state
       const printButton = document.querySelector('.print-button');
@@ -144,43 +144,26 @@ export default function ResumeBuilder() {
         printButton.innerHTML = '<svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Generating...';
       }
 
-      // Use html2canvas to capture the resume
-      const canvas = await html2canvas(resumeRef.current, {
-        scale: 2, // Higher quality
-        useCORS: true,
-        logging: false,
-      });
-
-      // Convert to PDF using jsPDF
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: 'a4',
-        compress: true
-      });
-
-      // Calculate dimensions
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // Add image to PDF
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      // Add additional pages if needed
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      // Determine the category based on the selected template
+      let category: 'Modern' | 'Traditional' | 'Simple' | 'Creative' = 'Modern';
+      if (selectedTemplate.startsWith('traditional')) {
+        category = 'Traditional';
+      } else if (selectedTemplate.startsWith('simple')) {
+        category = 'Simple';
+      } else if (selectedTemplate.startsWith('creative')) {
+        category = 'Creative';
       }
 
-      // Download the PDF
-      pdf.save(`${liveData.fullName || 'resume'}_Resume.pdf`);
+      // Create a mock template object for PDF generation
+      const mockTemplate = {
+        id: selectedTemplate,
+        name: selectedTemplate.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        category: category,
+        image: ''
+      };
+
+      // Use our new high-quality PDF generator with live data
+      await generateHighQualityPDF(mockTemplate, liveData);
 
       // Restore button text
       if (printButton) {

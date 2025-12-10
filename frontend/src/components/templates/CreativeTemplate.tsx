@@ -43,22 +43,22 @@ export const CreativeTemplate = ({ data }: { data: ResumeData }) => {
           <div className="flex flex-wrap gap-3">
             {data.email && (
               <a href={`mailto:${data.email}`} className="flex items-center gap-1 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                <Mail className="w-4 h-4"/> Email
+                <Mail className="w-4 h-4 flex-shrink-0" /> Email
               </a>
             )}
             {data.phone && (
               <a href={`tel:${data.phone}`} className="flex items-center gap-1 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                <Phone className="w-4 h-4"/> Call
+                <Phone className="w-4 h-4 flex-shrink-0" /> Call
               </a>
             )}
             {data.linkedin && (
               <a href={data.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-1 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                <Linkedin className="w-4 h-4"/> LinkedIn
+                <Linkedin className="w-4 h-4 flex-shrink-0" /> LinkedIn
               </a>
             )}
             {data.github && (
               <a href={data.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full transition">
-                <Github className="w-4 h-4"/> GitHub
+                <Github className="w-4 h-4 flex-shrink-0" /> GitHub
               </a>
             )}
           </div>
@@ -131,12 +131,12 @@ export const CreativeTemplate = ({ data }: { data: ResumeData }) => {
                     <div className="flex gap-2">
                       {proj.link && (
                         <a href={proj.link} target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-800">
-                          <ExternalLink className="w-4 h-4"/>
+                          <ExternalLink className="w-4 h-4 flex-shrink-0"/>
                         </a>
                       )}
                       {proj.repo && (
                         <a href={proj.repo} target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-800">
-                          <Code className="w-4 h-4"/>
+                          <Code className="w-4 h-4 flex-shrink-0"/>
                         </a>
                       )}
                     </div>

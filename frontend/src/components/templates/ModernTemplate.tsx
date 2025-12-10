@@ -66,18 +66,18 @@ export const ModernTemplate = ({ data }: { data: ResumeData }) => {
       <div className="space-y-3">
         {/* 1. Header */}
         <div className="text-center border-b-2 border-[#1f2937] pb-3">
-          <h1 className="text-3xl font-bold uppercase tracking-wide mb-1 text-[#000000]">{data.fullName || "Your Name"}</h1>
-          <div className="flex flex-wrap justify-center gap-3 text-sm text-[#374151]">
-            {data.email && <span className="flex items-center gap-1"><Mail className="w-3 h-3"/> {data.email}</span>}
-            {data.phone && <span className="flex items-center gap-1"><Phone className="w-3 h-3"/> {data.phone}</span>}
+          <h1 className="text-4xl font-bold uppercase tracking-wide mb-1 text-[#000000]">{data.fullName || "Your Name"}</h1>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-[#374151]">
+            {data.email && <span className="flex items-center gap-1"><Mail className="w-4 h-4 flex-shrink-0" /> {data.email}</span>}
+            {data.phone && <span className="flex items-center gap-1"><Phone className="w-4 h-4 flex-shrink-0" /> {data.phone}</span>}
             {data.linkedin && (
               <a href={data.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#1e40af] underline font-semibold">
-                <Linkedin className="w-3 h-3"/> LinkedIn
+                <Linkedin className="w-4 h-4 flex-shrink-0" /> LinkedIn
               </a>
             )}
             {data.github && (
               <a href={data.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-[#1e40af] underline font-semibold">
-                <Github className="w-3 h-3"/> GitHub
+                <Github className="w-4 h-4 flex-shrink-0" /> GitHub
               </a>
             )}
           </div>
@@ -135,12 +135,12 @@ export const ModernTemplate = ({ data }: { data: ResumeData }) => {
                     <div className="text-xs font-medium text-[#1e40af] flex gap-3">
                       {proj.link && (
                         <a href={proj.link} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
-                          Live Demo <ExternalLink className="w-3 h-3"/>
+                          Live Demo <ExternalLink className="w-3 h-3 flex-shrink-0"/>
                         </a>
                       )}
                       {proj.repo && (
                         <a href={proj.repo} target="_blank" rel="noreferrer" className="hover:underline flex items-center gap-1">
-                          GitHub <Code className="w-3 h-3"/>
+                          GitHub <Code className="w-3 h-3 flex-shrink-0"/>
                         </a>
                       )}
                     </div>

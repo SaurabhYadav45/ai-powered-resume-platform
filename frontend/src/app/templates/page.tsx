@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { ArrowRight, Check, LayoutTemplate, Filter, Star } from 'lucide-react';
+import { ArrowRight, Check, LayoutTemplate, Filter, Star, Download } from 'lucide-react';
 import { templates, TemplateCategory, Template } from '../../data/templates';
 import { useRouter } from 'next/navigation';
 import { Rubik } from 'next/font/google';
+import { downloadSampleResume } from '../../utils/templateUtils';
 
 // Load Rubik font
 const rubik = Rubik({
@@ -15,6 +16,7 @@ const rubik = Rubik({
 
 export default function TemplatesPage() {
   const [activeCategory, setActiveCategory] = useState<TemplateCategory>('All');
+  const [downloadingTemplate, setDownloadingTemplate] = useState<string | null>(null);
   const router = useRouter();
 
   // Filter logic
@@ -26,6 +28,19 @@ export default function TemplatesPage() {
 
   const handleUseTemplate = (templateId: string) => {
     router.push(`/builder?template=${templateId}`);
+  };
+
+  // New function to handle template download
+  const handleDownloadTemplate = async (template: Template) => {
+    try {
+      setDownloadingTemplate(template.id);
+      await downloadSampleResume(template);
+    } catch (error) {
+      console.error('Error downloading sample resume:', error);
+      alert('Failed to download sample resume. Please try again.');
+    } finally {
+      setDownloadingTemplate(null);
+    }
   };
 
   return (
@@ -69,7 +84,7 @@ export default function TemplatesPage() {
                       fontWeight: 400, // Regular
                     }}
                   >
-                    Choose from our free, ATS-friendly resume templates. Our intuitive AI Builder lets you customize them in minutes.
+                    Choose from our free, ATS-friendly resume templates. Preview samples or use our intuitive AI Builder to customize them in minutes. Each template comes with a downloadable sample to help you visualize the final result.
                   </p>
 
                   <div className="flex flex-col items-center lg:items-start gap-6">
@@ -164,13 +179,34 @@ export default function TemplatesPage() {
                         className="w-full h-full object-cover object-top transition-transform duration-700" 
                       />
                       
-                      {/* Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      {/* Hover Overlay with Dual Actions */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-3 p-4">
                           <button 
                             onClick={() => handleUseTemplate(template.id)}
-                            className="cursor-pointer px-6 py-3 bg-white text-gray-900 font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-2 hover:bg-indigo-50 shadow-lg text-sm"
+                            className="cursor-pointer px-6 py-3 bg-white text-gray-900 font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-2 hover:bg-indigo-50 shadow-lg text-sm w-4/5 justify-center"
                           >
                             Use Template <ArrowRight className="w-4 h-4"/>
+                          </button>
+                          
+                          <button 
+                            onClick={() => handleDownloadTemplate(template)}
+                            disabled={downloadingTemplate === template.id}
+                            className={`cursor-pointer px-6 py-3 font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex items-center gap-2 shadow-lg text-sm w-4/5 justify-center ${
+                              downloadingTemplate === template.id 
+                                ? 'bg-indigo-400 text-white' 
+                                : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                            }`}
+                          >
+                            {downloadingTemplate === template.id ? (
+                              <>
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                <Download className="w-4 h-4"/> Sample Resume
+                              </>
+                            )}
                           </button>
                       </div>
                     </div>
@@ -194,7 +230,6 @@ export default function TemplatesPage() {
              <p>No templates found in this category.</p>
            </div>
         )}
-
       </section>
       
       {/* CSS for Spinning Gradient */}
