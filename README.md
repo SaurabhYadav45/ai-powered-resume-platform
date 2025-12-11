@@ -1,6 +1,6 @@
-# AI-Powered Resume Analyzer
+# AI-Powered Resume Analyzer & Builder
 
-A full-stack web application that leverages generative AI to provide instant, detailed feedback on your resume, helping you stand out in the job market and land your dream job.
+A full-stack web application that leverages generative AI to provide instant, detailed feedback on your resume and offers a powerful resume builder to create professional resumes, helping you stand out in the job market and land your dream job.
 
 ---
 
@@ -10,10 +10,10 @@ A full-stack web application that leverages generative AI to provide instant, de
 
 | Home Page | Results Dashboard |
 |----------------------|-----------------|
-| <img width="100%" alt="Home Page" src="https://github.com/user-attachments/assets/6b42355b-b2b5-439b-bdad-5802beab3fa2?text=Home+Page" /> | <img width="100%" alt="Results Dashboard" src="https://github.com/user-attachments/assets/d472588f-e34d-46ce-9871-e1d113a00ab4?text=Result+Dashboard" /> |
+| <img width="100%" alt="Home Page" src="https://github.com/user-attachments/assets/5e346f92-9987-41f1-8b16-6d0847892e6e?text=Home+Page" /> | <img width="100%" alt="Results Dashboard" src="https://github.com/user-attachments/assets/a4188245-5006-4dd1-825a-09fa7caf06a1?text=Template+Page" /> |
 | Login Page | Upload & Analyze Page |
 |-----------------------|----------------------|
-| <img width="100%" alt="Login Paget" src="https://github.com/user-attachments/assets/f29eec36-97ef-471d-b7de-575ced478c66?text=Resume+Feedback" /> | <img width="100%" alt="upload Page" src="https://github.com/user-attachments/assets/727599ac-27a4-4783-8974-1367a0bf349a?text=Job+Suggestions" /> |
+| <img width="100%" alt="Login Paget" src="https://github.com/user-attachments/assets/d472588f-e34d-46ce-9871-e1d113a00ab4?text=Result+Dashboard" /> | <img width="100%" alt="upload Page" src="https://github.com/user-attachments/assets/b5d3cc41-e6cb-4f7d-b913-eaa8ec6d9994" /> |
 ---
 
 ## Features
@@ -24,6 +24,10 @@ A full-stack web application that leverages generative AI to provide instant, de
 - **Secure User Accounts:** Full authentication system allows users to sign up and log in to save their analysis history.  
 - **Track Your Progress:** Logged-in users can view a history of their past analyses, making it easy to see how their resume improves over time.  
 - **Downloadable PDF Reports:** Save a professional-looking PDF of any analysis report for offline reference.  
+- **Modern Resume Builder:** Create professional resumes with customizable templates, themes, and fonts.  
+- **Multiple Templates:** Choose from various professionally designed resume templates (Modern, Traditional, Simple, Creative).  
+- **Real-time Preview:** See changes to your resume in real-time as you build it.  
+- **Export to PDF:** Download your created resume as a high-quality PDF document.  
 - **Modern & Responsive UI:** A clean, intuitive, and mobile-friendly interface built with Next.js and Tailwind CSS.  
 
 ---
@@ -37,7 +41,7 @@ A full-stack web application that leverages generative AI to provide instant, de
 | **State Management:** React Hooks & Context | **Authentication:** JWT, bcryptjs |
 | **Form Handling:** React Hook Form + Zod | **File Handling:** Multer |
 | **API Calls:** Axios | **Text Extraction:** pdf-parse, mammoth.js |
-| **PDF Generation:** jsPDF, html2canvas | **AI Integration:** Google Gemini API |
+| **PDF Generation:** jsPDF, html2canvas | **AI Integration:** OpenAI API |
 
 ---
 
@@ -64,7 +68,7 @@ Follow these steps to get a local copy up and running.
 PORT=5001
 MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
 JWT_SECRET=YOUR_JWT_SECRET
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 ```
 
 #### 3. Run the server:
