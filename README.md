@@ -10,7 +10,7 @@ A full-stack web application that leverages generative AI to provide instant, de
 
 | Home Page | Results Dashboard |
 |----------------------|-----------------|
-| <img width="100%" alt="Home Page" src="https://github.com/user-attachments/assets/5e346f92-9987-41f1-8b16-6d0847892e6e?text=Home+Page" /> | <img width="100%" alt="Results Dashboard" src="https://github.com/user-attachments/assets/a4188245-5006-4dd1-825a-09fa7caf06a1?text=Template+Page" /> |
+| <img width="100%" alt="Home Page" src="https://github.com/user-attachments/assets/ea82d9c5-1554-4237-9b88-4c720a022c76?text=Home+Page" /> | <img width="100%" alt="Results Dashboard" src="https://github.com/user-attachments/assets/a4188245-5006-4dd1-825a-09fa7caf06a1?text=Template+Page" /> |
 | Login Page | Upload & Analyze Page |
 |-----------------------|----------------------|
 | <img width="100%" alt="Login Paget" src="https://github.com/user-attachments/assets/d472588f-e34d-46ce-9871-e1d113a00ab4?text=Result+Dashboard" /> | <img width="100%" alt="upload Page" src="https://github.com/user-attachments/assets/b5d3cc41-e6cb-4f7d-b913-eaa8ec6d9994" /> |
