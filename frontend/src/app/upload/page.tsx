@@ -31,7 +31,7 @@ const formSchema = z.object({
   jobDescription: z.string().optional(),
 });
 
-export default function UploadPage() {
+function UploadContent() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -338,5 +338,13 @@ export default function UploadPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function UploadPage() {
+  return (
+    <React.Suspense fallback={<div className="flex justify-center items-center min-h-[60vh]"><Loader className="animate-spin h-12 w-12 text-indigo-500" /></div>}>
+      <UploadContent />
+    </React.Suspense>
   );
 }
