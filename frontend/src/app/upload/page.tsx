@@ -291,7 +291,7 @@ export default function UploadPage() {
               
               {/* Secondary Tips Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch mt-6">
-                <AtsTips tips={analysisResult.atsOptimizationTips} score={analysisResult.atsScore} />
+                <AtsTips tips={analysisResult.atsOptimizationTips} />
                 {(analysisResult.unquantifiedBulletPoints?.length > 0 || analysisResult.buzzwordsDetected?.length > 0) && (
                   <RedFlagsCard 
                     unquantifiedPoints={analysisResult.unquantifiedBulletPoints} 
