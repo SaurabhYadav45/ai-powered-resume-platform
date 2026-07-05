@@ -92,7 +92,7 @@ const PricingPage = () => {
               
               <a 
                 href="/upload" 
-                className="block w-full bg-gray-100 text-gray-800 text-center py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-200 transition-colors"
+                className="block w-full bg-black text-gray-800 text-center py-2.5 px-4 rounded-xl text-sm font-semibold hover:bg-gray-200 transition-colors"
               >
                 Get Started Free
               </a>
