@@ -10,10 +10,10 @@ A full-stack web application that leverages generative AI to provide instant, de
 
 | Home Page | Results Dashboard |
 |----------------------|-----------------|
-| <img width="100%" alt="Home Page" src="https://github.com/user-attachments/assets/6b42355b-b2b5-439b-bdad-5802beab3fa2?text=Home+Page" /> | <img width="100%" alt="Results Dashboard" src="https://github.com/user-attachments/assets/d472588f-e34d-46ce-9871-e1d113a00ab4?text=Result+Dashboard" /> |
+| <img width="100%" alt="Home Page" src="https://github.com/user-attachments/assets/ea82d9c5-1554-4237-9b88-4c720a022c76?text=Home+Page" /> | <img width="100%" alt="Results Dashboard" src="https://github.com/user-attachments/assets/a4188245-5006-4dd1-825a-09fa7caf06a1?text=Template+Page" /> |
 | Login Page | Upload & Analyze Page |
 |-----------------------|----------------------|
-| <img width="100%" alt="Login Paget" src="https://github.com/user-attachments/assets/f29eec36-97ef-471d-b7de-575ced478c66?text=Resume+Feedback" /> | <img width="100%" alt="upload Page" src="https://github.com/user-attachments/assets/727599ac-27a4-4783-8974-1367a0bf349a?text=Job+Suggestions" /> |
+| <img width="100%" alt="Login Paget" src="https://github.com/user-attachments/assets/d472588f-e34d-46ce-9871-e1d113a00ab4?text=Result+Dashboard" /> | <img width="100%" alt="upload Page" src="https://github.com/user-attachments/assets/b5d3cc41-e6cb-4f7d-b913-eaa8ec6d9994" /> |
 ---
 
 ## Features
@@ -41,7 +41,7 @@ A full-stack web application that leverages generative AI to provide instant, de
 | **State Management:** React Hooks & Context | **Authentication:** JWT, bcryptjs |
 | **Form Handling:** React Hook Form + Zod | **File Handling:** Multer |
 | **API Calls:** Axios | **Text Extraction:** pdf-parse, mammoth.js |
-| **PDF Generation:** jsPDF, html2canvas | **AI Integration:** Google Gemini API |
+| **PDF Generation:** jsPDF, html2canvas | **AI Integration:** OpenAI API |
 
 ---
 
@@ -68,7 +68,7 @@ Follow these steps to get a local copy up and running.
 PORT=5001
 MONGO_URI=YOUR_MONGODB_CONNECTION_STRING
 JWT_SECRET=YOUR_JWT_SECRET
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY
 ```
 
 #### 3. Run the server:
