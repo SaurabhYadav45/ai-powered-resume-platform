@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { ResumeData } from '../../../types/builder';
+import { ResumeData } from '../../../../types/builder';
 import { Mail, Phone, MapPin, Globe, Linkedin } from 'lucide-react';
 
 interface TemplateProps {
