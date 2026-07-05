@@ -100,6 +100,10 @@ const aiAnalysis = {
         "actionVerbsScore": <A percentage (number from 0-100) assessing the strength and variety of action verbs used throughout the resume.>,
         "contentRelevance": <A percentage (number from 0-100) measuring how well the experience aligns with typical requirements for the candidate's likely career field.>,
         "lengthScore": <A percentage (number from 0-100) evaluating if the resume length is appropriate (typically 1-2 pages for most professionals).>,
+        "quantificationScore": <A percentage (number from 0-100) calculating the proportion of bullet points that contain concrete numbers, percentages, or dollar amounts.>,
+        "unquantifiedBulletPoints": <An array of 1-3 strings. Find 1-3 bullet points from the resume that lack metrics. For each, return the original bullet point followed by a short suggestion in brackets. Example: "Developed an EdTech platform [Suggestion: Add how many active users or features built]”>,
+        "buzzwordsDetected": <An array of strings. Identify any clichés or empty buzzwords used (e.g., "Team player", "Hard worker", "Synergy"). Return empty array if none found.>,
+        "readabilityScore": <A percentage (number from 0-100) assessing how easy the resume is to skim. Penalize dense text blocks, passive voice, or overly complex jargon.>,
         "industryBenchmark": <An object containing benchmark data for comparison. Include: {"avgSkillsMatch": <number 0-100>, "avgAtsScore": <number 0-100>, "avgImpactScore": <number 0-100>, "topKeywords": ["keyword1", "keyword2", "keyword3"]}. Estimate realistic averages for the candidate's field.>
       }
     `;
@@ -304,6 +308,42 @@ const aiAnalysis = {
     } catch (error) {
       console.error("Resume Builder Error:", error);
       throw new Error("Failed to build resume content.");
+    }
+  },
+
+  /**
+   * @async
+   * @function improveText
+   * @description Enhances a single resume bullet point or summary using AI.
+   */
+  improveText: async (textToImprove) => {
+    console.log("--- [AI Service] Starting Text Improvement ---");
+
+    const prompt = `
+      You are an expert resume writer. Improve the following resume text to make it more professional, impactful, and concise. 
+      Use strong action verbs. Quantify achievements if the numbers are implied, or leave placeholders if they are not.
+      
+      Original Text: "${textToImprove}"
+      
+      Output ONLY the improved text. Do not include any quotes, explanations, prefixes, or markdown. Just the raw string.
+    `;
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "system", content: "You are a professional resume writer." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.5,
+      });
+
+      const improvedText = completion.choices[0].message.content.trim();
+      // Remove surrounding quotes if OpenAI added them accidentally
+      return improvedText.replace(/^["']|["']$/g, '');
+    } catch (error) {
+      console.error("--- [AI Service] Error improving text: ---", error);
+      throw new Error("Failed to improve text.");
     }
   }
 };

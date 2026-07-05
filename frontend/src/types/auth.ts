@@ -2,6 +2,7 @@ import * as z from 'zod';
 
 // Zod schema for the login/signup form
 export const authSchema = z.object({
+  name: z.string().optional(),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters long.' }),
 });
@@ -14,4 +15,7 @@ export interface AuthResponse {
   message: string;
   token: string;
   email: string;
+  name?: string;
+  credits?: number;
+  isPro?: boolean;
 }

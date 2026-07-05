@@ -59,9 +59,14 @@ export const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-gray-200/50 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
           <p>&copy; {new Date().getFullYear()} ResuMate. All rights reserved.</p>
+          
+          <p className="mt-4 md:mt-0 font-medium text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+            Built & Designed by Saurabh Yadav
+          </p>
+
           <div className="flex items-center gap-1 mt-4 md:mt-0">
             <span>Made with</span>
-            <Heart className="h-4 w-4 text-red-500 fill-red-500" />
+            <Heart className="h-4 w-4 text-red-500 fill-red-500 mx-1" />
             <span>for job seekers everywhere.</span>
           </div>
         </div>

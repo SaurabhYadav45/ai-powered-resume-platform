@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const parseResume = require('../utils/parseResume');
 const aiAnalysis = require('../utils/aiAnalysis');
 const Analysis = require('../models/Analysis.model');
+const ResumeDraft = require('../models/ResumeDraft.model');
 
 const resumeController = {
   analyze: async (req, res) => {
@@ -21,28 +22,30 @@ const resumeController = {
         return res.status(400).json({ message: 'Could not extract text from the resume.' });
       }
 
+      // 1. Check Credits before proceeding
+      const user = req.user; // Available because of 'protect' middleware
+      let currentCredits = user.credits !== undefined ? user.credits : 5;
+
+      if (!user.isPro && currentCredits <= 0) {
+        return res.status(403).json({ message: 'Insufficient credits. Please upgrade your plan to analyze more resumes.' });
+      }
+
+      // 2. Perform Analysis
       const { jobDescription } = req.body;
       const analysisResult = await aiAnalysis.analyze(resumeText, jobDescription);
 
-      const authHeader = req.headers.authorization;
-      if (authHeader && authHeader.startsWith('Bearer ')) {
-        try {
-          const token = authHeader.split(' ')[1];
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
-          
-          await Analysis.create({
-            user: decoded.id,
-            analysisResult: analysisResult,
-            fileName: req.file.originalname,
-          });
-          console.log(`--- [Controller] Analysis saved for user: ${decoded.id} ---`);
-
-        } catch (error) {
-          console.log('--- [Controller] Invalid token found. Proceeding as anonymous user. ---');
-        }
-      } else {
-        console.log('--- [Controller] No user token found. Proceeding as anonymous user. ---');
+      // 3. Deduct Credit and Save History
+      if (!user.isPro) {
+        user.credits = currentCredits - 1;
+        await user.save();
       }
+
+      await Analysis.create({
+        user: user._id,
+        analysisResult: analysisResult,
+        fileName: req.file.originalname,
+      });
+      console.log(`--- [Controller] Analysis saved for user: ${user._id}. Remaining credits: ${user.credits} ---`);
 
       // We'll also send back the extracted resume text to the frontend
       // so we can use it for the cover letter generation without a second upload.
@@ -56,7 +59,7 @@ const resumeController = {
 
   getHistory: async (req, res) => {
     try {
-      const analyses = await Analysis.find({ user: req.user.id }).sort({ createdAt: -1 });
+      const analyses = await Analysis.find({ user: req.user._id }).sort({ createdAt: -1 });
       res.status(200).json(analyses);
     } catch (error) {
       console.error('--- [History Error] ---', error);
@@ -97,6 +100,60 @@ const resumeController = {
     } catch (error) {
       console.error('--- [Resume Builder Error] ---', error);
       res.status(500).json({ message: 'Server error while building resume.' });
+    }
+  },
+
+  getDraft: async (req, res) => {
+    try {
+      const draft = await ResumeDraft.findOne({ user: req.user._id });
+      if (!draft) {
+        return res.status(404).json({ message: 'No saved draft found.' });
+      }
+      res.status(200).json({ data: draft.data });
+    } catch (error) {
+      console.error('--- [Get Draft Error] ---', error);
+      res.status(500).json({ message: 'Server error while fetching resume draft.' });
+    }
+  },
+
+  saveDraft: async (req, res) => {
+    try {
+      const { data } = req.body;
+      if (!data) {
+        return res.status(400).json({ message: 'Draft data is required.' });
+      }
+
+      // Find and update if exists, otherwise create new
+      let draft = await ResumeDraft.findOne({ user: req.user._id });
+      if (draft) {
+        draft.data = data;
+        await draft.save();
+      } else {
+        draft = await ResumeDraft.create({
+          user: req.user._id,
+          data: data
+        });
+      }
+
+      res.status(200).json({ message: 'Draft saved successfully.', draftId: draft._id });
+    } catch (error) {
+      console.error('--- [Save Draft Error] ---', error);
+      res.status(500).json({ message: 'Server error while saving resume draft.' });
+    }
+  },
+
+  improveText: async (req, res) => {
+    try {
+      const { text } = req.body;
+      if (!text || typeof text !== 'string') {
+        return res.status(400).json({ message: 'Text is required to improve.' });
+      }
+
+      const improved = await aiAnalysis.improveText(text);
+      res.status(200).json({ improved });
+    } catch (error) {
+      console.error('--- [Improve Text Error] ---', error);
+      res.status(500).json({ message: 'Server error while improving text.' });
     }
   }
 };

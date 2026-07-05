@@ -34,8 +34,8 @@ const upload = multer({
 
 // @route   POST /api/resume/analyze
 // @desc    Analyze a resume. Saves history if user is logged in.
-// @access  Public
-router.post('/analyze', upload.single('resume'), resumeController.analyze);
+// @access  Private
+router.post('/analyze', protect, upload.single('resume'), resumeController.analyze);
 
 // @route   GET /api/resume/history
 // @desc    Get the analysis history for the logged-in user.
@@ -44,12 +44,27 @@ router.get('/history', protect, resumeController.getHistory);
 
 // @route   POST /api/resume/generate-cover-letter
 // @desc    Generate a cover letter based on resume text and a job description.
-// @access  Public
-router.post('/generate-cover-letter', resumeController.generateCoverLetter);
+// @access  Private
+router.post('/generate-cover-letter', protect, resumeController.generateCoverLetter);
+
+// @route   GET /api/resume/draft
+// @desc    Get the saved resume draft for the logged-in user
+// @access  Private
+router.get('/draft', protect, resumeController.getDraft);
+
+// @route   POST /api/resume/draft
+// @desc    Save the resume draft for the logged-in user
+// @access  Private
+router.post('/draft', protect, resumeController.saveDraft);
 
 // @route   POST /api/resume/build
 // @desc    Generate professional resume content from raw data
-// @access  Public (or Private if you want)
-router.post('/build', resumeController.buildResume);
+// @access  Private
+router.post('/build', protect, resumeController.buildResume);
+
+// @route   POST /api/resume/improve-text
+// @desc    Improve a single line of resume text via AI
+// @access  Private
+router.post('/improve-text', protect, resumeController.improveText);
 
 module.exports = router;

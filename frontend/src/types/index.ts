@@ -22,6 +22,10 @@ export interface AnalysisResult {
   actionVerbsScore: number;
   contentRelevance: number;
   lengthScore: number;
+  quantificationScore: number;
+  unquantifiedBulletPoints: string[];
+  buzzwordsDetected: string[];
+  readabilityScore: number;
   industryBenchmark: {
     avgSkillsMatch: number;
     avgAtsScore: number;

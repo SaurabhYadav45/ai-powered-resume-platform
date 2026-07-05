@@ -20,4 +20,10 @@ router.post('/signup', authController.signup);
 // @access  Public
 router.post('/login', authController.login);
 
+// @route   GET /api/auth/me
+// @desc    Get current user profile (for credits/isPro)
+// @access  Private
+const { protect } = require('../middlewares/auth.middleware');
+router.get('/me', protect, authController.getMe);
+
 module.exports = router;

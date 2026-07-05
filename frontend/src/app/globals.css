@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap');
+
+.font-rubik {
+  font-family: 'Rubik', sans-serif;
+}
 
 :root {
   --background: #ffffff;
@@ -115,5 +120,30 @@ main {
   transform: rotateY(180deg);
 }
 
-
-
+/* HIGH QUALITY PDF EXPORT OVERRIDES */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  
+  /* Force browsers to print all backgrounds exactly as they appear */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+  }
+  
+  /* Remove animated backgrounds during print */
+  body::before {
+    display: none !important;
+  }
+}

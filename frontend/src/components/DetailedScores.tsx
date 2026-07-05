@@ -9,13 +9,14 @@ interface DetailedScoresProps {
 }
 
 export const DetailedScores = ({ analysis }: DetailedScoresProps) => {
-  // Prepare data for the chart
   const scoreData = [
-    { name: 'ATS Score', score: analysis.atsScore },
-    { name: 'Impact', score: analysis.impactScore },
-    { name: 'Action Verbs', score: analysis.actionVerbsScore },
-    { name: 'Relevance', score: analysis.contentRelevance },
-    { name: 'Length', score: analysis.lengthScore },
+    { name: 'ATS Score', score: analysis.atsScore || 0 },
+    { name: 'Impact', score: analysis.impactScore || 0 },
+    { name: 'Action Verbs', score: analysis.actionVerbsScore || 0 },
+    { name: 'Relevance', score: analysis.contentRelevance || 0 },
+    { name: 'Length', score: analysis.lengthScore || 0 },
+    { name: 'Metrics Usage', score: analysis.quantificationScore || 0 },
+    { name: 'Readability', score: analysis.readabilityScore || 0 },
   ];
 
   return (

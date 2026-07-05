@@ -1,6 +1,6 @@
-# AI-Powered Resume Analyzer
+# AI-Powered Resume Analyzer & Builder
 
-A full-stack web application that leverages generative AI to provide instant, detailed feedback on your resume, helping you stand out in the job market and land your dream job.
+A full-stack web application that leverages generative AI to provide instant, detailed feedback on your resume and offers a powerful resume builder to create professional resumes, helping you stand out in the job market and land your dream job.
 
 ---
 
@@ -24,6 +24,10 @@ A full-stack web application that leverages generative AI to provide instant, de
 - **Secure User Accounts:** Full authentication system allows users to sign up and log in to save their analysis history.  
 - **Track Your Progress:** Logged-in users can view a history of their past analyses, making it easy to see how their resume improves over time.  
 - **Downloadable PDF Reports:** Save a professional-looking PDF of any analysis report for offline reference.  
+- **Modern Resume Builder:** Create professional resumes with customizable templates, themes, and fonts.  
+- **Multiple Templates:** Choose from various professionally designed resume templates (Modern, Traditional, Simple, Creative).  
+- **Real-time Preview:** See changes to your resume in real-time as you build it.  
+- **Export to PDF:** Download your created resume as a high-quality PDF document.  
 - **Modern & Responsive UI:** A clean, intuitive, and mobile-friendly interface built with Next.js and Tailwind CSS.  
 
 ---

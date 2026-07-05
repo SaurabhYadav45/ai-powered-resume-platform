@@ -21,7 +21,7 @@ const authController = {
    * @description Registers a new user.
    */
   signup: async (req, res) => {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
 
     try {
       // Check if user already exists
@@ -32,6 +32,7 @@ const authController = {
 
       // Create a new user
       const user = await User.create({
+        name,
         email,
         password, // The password will be automatically hashed by the pre-save hook in the model
       });
@@ -43,6 +44,9 @@ const authController = {
           message: 'User registered successfully.',
           token,
           email: user.email,
+          name: user.name,
+          credits: user.credits,
+          isPro: user.isPro
         });
       } else {
         res.status(400).json({ message: 'Invalid user data.' });
@@ -74,6 +78,9 @@ const authController = {
           message: 'User logged in successfully.',
           token,
           email: user.email,
+          name: user.name,
+          credits: user.credits !== undefined ? user.credits : 5, // Fallback for legacy users
+          isPro: user.isPro || false
         });
       } else {
         // If user not found or password incorrect, send a generic error
@@ -84,6 +91,30 @@ const authController = {
       res.status(500).json({ message: 'Server error during login.' });
     }
   },
+
+  /**
+   * @async
+   * @function getMe
+   * @description Fetches current user profile (used to refresh credits).
+   */
+  getMe: async (req, res) => {
+    try {
+      const user = await User.findById(req.user._id).select('-password');
+      if (user) {
+        res.status(200).json({
+          email: user.email,
+          name: user.name,
+          credits: user.credits !== undefined ? user.credits : 5,
+          isPro: user.isPro || false
+        });
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      console.error('--- [GetMe Error] ---', error);
+      res.status(500).json({ message: 'Server error fetching user profile.' });
+    }
+  }
 };
 
 module.exports = authController;

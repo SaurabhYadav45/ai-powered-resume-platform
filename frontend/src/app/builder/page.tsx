@@ -1,398 +1,192 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useForm, useFieldArray, SubmitHandler } from 'react-hook-form';
-import { Loader, Wand2, Printer, Plus, Trash2, Download, Settings, Type, Palette } from 'lucide-react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import { Download, Save, Eye, Edit2, CheckCircle2, Loader2 } from 'lucide-react';
+import { ResumeForm, STEPS } from '../../components/builder/ResumeForm';
+import { ResumePreview } from '../../components/builder/ResumePreview';
+import { dummyResumeData } from '../../utils/dummyResumeData';
+import { ResumeData } from '../../types/builder';
 import axios from 'axios';
-import { ModernTemplate, ResumeData } from '../../components/templates/ModernTemplate';
-import { SimpleTemplate } from '../../components/templates/SimpleTemplate';
-import { CreativeTemplate } from '../../components/templates/CreativeTemplate';
-import { TraditionalTemplate } from '../../components/templates/TraditionalTemplate';
-import { generateHighQualityPDF } from '../../utils/pdfGenerator';
+import Cookies from 'js-cookie';
+import { useSearchParams } from 'next/navigation';
 
-type ResumeFormData = ResumeData;
+function BuilderContent() {
+  const searchParams = useSearchParams();
+  const templateId = searchParams.get('template');
 
-export default function ResumeBuilder() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState('modern-1');
-  const resumeRef = useRef<HTMLDivElement>(null);
-
-  // --- Resume Settings State ---
-  const [themeColor, setThemeColor] = useState('#000000');
-  const [fontFamily, setFontFamily] = useState('Roboto'); // Default to Roboto
-
-  // Font family options
-  const fontOptions = [
-    'Roboto', 'Lato', 'Montserrat', 'Open Sans', 'Raleway', 
-    'Caladea', 'Lora', 'Roboto Slab', 'Playfair Display', 'Merriweather'
-  ];
+  const [data, setData] = useState<ResumeData>(dummyResumeData);
+  const [viewMode, setViewMode] = useState<'edit' | 'preview'>('edit');
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentStep, setCurrentStep] = useState(0);
+  const componentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const templateParam = params.get('template');
-      if (templateParam) {
-        setSelectedTemplate(templateParam);
+    const fetchDraft = async () => {
+      const token = Cookies.get('authToken');
+      if (!token) {
+        setIsLoading(false);
+        return; // Use dummy data if not logged in
       }
-    }
+
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+        const response = await axios.get(`${API_URL}/resume/draft`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (response.data && response.data.data) {
+          setData(response.data.data);
+        }
+      } catch (error: any) {
+        console.error("Failed to fetch draft:", error);
+        // If 404 (no draft found), just silently fall back to dummy data
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDraft();
   }, []);
 
-  const { register, control, handleSubmit, watch, reset } = useForm<ResumeFormData>({
-    defaultValues: {
-      fullName: "Saurabh Singh Yadav",
-      email: "saurabhkry88@gmail.com",
-      phone: "9602959967",
-      github: "https://github.com/SaurabhYadav45/",
-      linkedin: "https://www.linkedin.com/in/saurabhyadav45/",
-      summaryRaw: "Full-Stack Developer with strong MERN Stack and Generative AI experience, passionate about building scalable full-stack applications",
-      skillsRaw: "C++ (DSA), JavaScript, Typescript, Python, HTML, CSS, React.js, Next.js, Redux, Tailwind CSS, Node.js, Express.js, Mongoose, MongoDB, SQL, MySQL, Git, Github, Postman, Cloudinary, Render, Vercel, OpenAI/Gemini API, Data Structure & Algorithm, OperatingSystem, Database Management System, Object-Oriented Programming",
-      achievementsRaw: "Solved 800+ DSA problems on Leetcode, Ranked in the top 15% globally with a contest rating of 1680 on LeetCode.",
-      education: [{ 
-        institution: "Dr. Rizvi Learner's Academy, Jaunpur", 
-        degree: "Class 12th", 
-        year: "2019-2021", 
-        grade: "75%" 
-      }],
-      experience: [{ 
-        company: "TechTadka", 
-        role: "Full-Stack Developer", 
-        date: "01/05/2025 to 01/10/2025", 
-        descriptionRaw: "I was working as a Full stack developer and built Scalable and Robust Full-stack Application." 
-      }],
-      projects: [{ 
-        title: "StudyWave - An Edtech Learning Platform", 
-        techStack: "React, Tailwind, Nodejs, expressjs, mongodb, razorpay, jwt, Multer, mongoose", 
-        descriptionRaw: "Developed a full-stack EdTech platform with distinct portals, allowing instructors to create, sell, and track courses, while providing students a seamless interface for purchasing and learning.JWT and email-based OTP verification; integrated Razorpay for seamless payment processing and Cloudinary/Multer for robust media management.", 
-        link: "https://studywave-frontend.onrender.com/", 
-        repo: "" }]
-    }
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: `${data.personalInfo.fullName.replace(/\s+/g, '_')}_Resume`,
   });
 
-  const { fields: expFields, append: appendExp, remove: removeExp } = useFieldArray({ control, name: "experience" });
-  const { fields: eduFields, append: appendEdu, remove: removeEdu } = useFieldArray({ control, name: "education" });
-  const { fields: projFields, append: appendProj, remove: removeProj } = useFieldArray({ control, name: "projects" });
+  const handleSave = async () => {
+    const token = Cookies.get('authToken');
+    if (!token) {
+      alert("Please log in to save your draft to the database.");
+      return;
+    }
 
-  const liveData = watch();
-
-  const onSubmit: SubmitHandler<ResumeFormData> = async (data) => {
-    setIsLoading(true);
+    setIsSaving(true);
     try {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
-      const response = await axios.post(`${API_BASE_URL}/resume/build`, data);
-      
-      const polished = response.data.polishedContent;
-
-      const updatedFormData: ResumeFormData = {
-        fullName: polished.fullName,
-        email: polished.email,
-        phone: polished.phone,
-        github: polished.github,
-        linkedin: polished.linkedin,
-        summaryRaw: polished.professionalSummary,
-        skillsRaw: Array.isArray(polished.skills) ? polished.skills.join(', ') : polished.skills,
-        achievementsRaw: Array.isArray(polished.achievements) ? polished.achievements.join('\n') : polished.achievements || "",
-        education: polished.education,
-        experience: polished.experience.map((exp: any) => ({
-          company: exp.company,
-          role: exp.role,
-          date: exp.date,
-          descriptionRaw: Array.isArray(exp.descriptionPoints) 
-            ? exp.descriptionPoints.map((p: string) => `• ${p}`).join('\n') 
-            : exp.descriptionPoints
-        })),
-        projects: polished.projects.map((proj: any) => ({
-          title: proj.title,
-          techStack: proj.techStack,
-          link: proj.link || data.projects.find(p => p.title === proj.title)?.link || "", 
-          repo: proj.repo || data.projects.find(p => p.title === proj.title)?.repo || "", 
-          descriptionRaw: Array.isArray(proj.descriptionPoints) 
-            ? proj.descriptionPoints.map((p: string) => `• ${p}`).join('\n') 
-            : proj.descriptionPoints
-        })),
-      };
-
-      reset(updatedFormData);
-      
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+      await axios.post(`${API_URL}/resume/draft`, { data }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      alert('Resume draft saved successfully!');
     } catch (error) {
-      console.error("Error building resume:", error);
-      alert("Failed to connect to backend.");
+      console.error("Failed to save draft:", error);
+      alert('Failed to save draft. Please try again.');
     } finally {
-      setIsLoading(false);
+      setIsSaving(false);
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
+  const handleAiImprove = async (text: string, onComplete: (improved: string) => void) => {
+    const token = Cookies.get('authToken');
+    if (!token) {
+      alert("Please log in to use the AI Improvement feature.");
+      return;
+    }
 
-  const handleDownloadPDF = async () => {
     try {
-      const printButton = document.querySelector('.print-button');
-      if (printButton) {
-        printButton.innerHTML = '<svg class="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Generating...';
-      }
-
-      let category: 'Modern' | 'Traditional' | 'Simple' | 'Creative' = 'Modern';
-      if (selectedTemplate.startsWith('traditional')) {
-        category = 'Traditional';
-      } else if (selectedTemplate.startsWith('simple')) {
-        category = 'Simple';
-      } else if (selectedTemplate.startsWith('creative')) {
-        category = 'Creative';
-      }
-
-      const mockTemplate = {
-        id: selectedTemplate,
-        name: selectedTemplate.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        category: category,
-        image: ''
-      };
-
-      await generateHighQualityPDF(mockTemplate, liveData);
-
-      if (printButton) {
-        printButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download PDF';
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+      const response = await axios.post(
+        `${API_URL}/resume/improve-text`, 
+        { text }, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (response.data && response.data.improved) {
+        onComplete(response.data.improved);
       }
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Failed to generate PDF. Please try again.');
-      
-      const printButton = document.querySelector('.print-button');
-      if (printButton) {
-        printButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>Download PDF';
-      }
+      console.error("Failed to improve text:", error);
+      alert('AI Improvement failed. Please try again.');
     }
   };
 
-  const renderTemplate = () => {
-    // Use a default font size since we're removing the font size functionality
-    const defaultFontSize = 16;
-    
-    const styleProps = { themeColor, fontFamily, fontSize: defaultFontSize };
-    
-    // @ts-ignore 
-    if (selectedTemplate.startsWith('creative')) return <CreativeTemplate data={liveData} {...styleProps} />;
-    // @ts-ignore
-    if (selectedTemplate.startsWith('simple')) return <SimpleTemplate data={liveData} {...styleProps} />;
-    // @ts-ignore
-    if (selectedTemplate.startsWith('traditional')) return <TraditionalTemplate data={liveData} {...styleProps} />;
-    
-    // @ts-ignore
-    return <ModernTemplate data={liveData} {...styleProps} />;
-  };
-
-  return (
-    <div className="container mx-auto max-w-7xl">
-      <header className="text-center mb-10 print:hidden pt-8">
-        <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text">AI Resume Builder</h1>
-        <p className="mt-2 text-gray-600">Editing Template: <span className="font-bold text-indigo-600 uppercase">{selectedTemplate}</span></p>
-      </header>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 print:block">
-        
-        {/* --- LEFT: INPUT FORM --- */}
-        <div className="glass-card-purple p-6 rounded-2xl shadow-sm border border-gray-200 h-fit print:hidden max-h-[85vh] overflow-y-auto sticky top-4 custom-scrollbar">
-          
-             
-             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                {/* Resume Settings Section */}
-                <div className="space-y-4 p-4 content-glow-purple rounded-lg border-2 border-gray-300">
-                  <h3 className="font-semibold text-gray-700 flex items-center gap-2">
-                    <Settings className="w-5 h-5" />
-                    Resume Settings
-                  </h3>
-                  
-                  {/* Theme Selection */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Palette className="w-4 h-4" />
-                      Theme Color
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="color"
-                        value={themeColor}
-                        onChange={(e) => setThemeColor(e.target.value)}
-                        className="w-10 h-10 border-0 rounded cursor-pointer"
-                      />
-                      <span className="text-sm text-gray-600">{themeColor}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Font Family */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Type className="w-4 h-4" />
-                      Font Family
-                    </label>
-                    <select
-                      value={fontFamily}
-                      onChange={(e) => setFontFamily(e.target.value)}
-                      className="input-field"
-                    >
-                      {fontOptions.map(font => (
-                        <option key={font} value={font}>{font}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                
-                {/* Personal Info */}
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-gray-700">Personal Info</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input {...register("fullName")} placeholder="Full Name" className="input-field" required />
-                    <input {...register("email")} placeholder="Email" className="input-field" required />
-                    <input {...register("phone")} placeholder="Phone Number" className="input-field" />
-                    <input {...register("linkedin")} placeholder="LinkedIn URL" className="input-field" />
-                    <input {...register("github")} placeholder="GitHub URL" className="input-field md:col-span-2" />
-                  </div>
-                </div>
-
-                {/* Overview */}
-                <div>
-                   <h3 className="font-semibold text-gray-700 mb-2">Overview</h3>
-                   <textarea {...register("summaryRaw")} placeholder="Brief professional summary..." className="input-field h-20" />
-                </div>
-
-                {/* Education */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-gray-700">Education</h3>
-                    <button type="button" onClick={() => appendEdu({ institution: "", degree: "", year: "", grade: "" })} className="text-indigo-600 text-sm font-bold flex items-center"><Plus className="w-4 h-4 mr-1"/> Add</button>
-                  </div>
-                  {eduFields.map((field, index) => (
-                    <div key={field.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-2">
-                      <div className="grid grid-cols-2 gap-2">
-                        <input {...register(`education.${index}.institution`)} placeholder="School/College" className="input-field" />
-                        <input {...register(`education.${index}.degree`)} placeholder="Degree" className="input-field" />
-                        <input {...register(`education.${index}.year`)} placeholder="Year" className="input-field" />
-                        <input {...register(`education.${index}.grade`)} placeholder="Grade" className="input-field" />
-                      </div>
-                      <button type="button" onClick={() => removeEdu(index)} className="text-red-500 text-xs flex items-center"><Trash2 className="w-3 h-3 mr-1"/> Remove</button>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Projects */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-gray-700">Projects</h3>
-                    <button type="button" onClick={() => appendProj({ title: "", techStack: "", descriptionRaw: "", link: "", repo: "" })} className="text-indigo-600 text-sm font-bold flex items-center"><Plus className="w-4 h-4 mr-1"/> Add</button>
-                  </div>
-                  {projFields.map((field, index) => (
-                    <div key={field.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-2">
-                      <input {...register(`projects.${index}.title`)} placeholder="Project Title" className="input-field" />
-                      <input {...register(`projects.${index}.techStack`)} placeholder="Tech Stack Used" className="input-field" />
-                      <div className="grid grid-cols-2 gap-2">
-                        <input {...register(`projects.${index}.link`)} placeholder="Live Demo Link" className="input-field" />
-                        <input {...register(`projects.${index}.repo`)} placeholder="GitHub Repo Link" className="input-field" />
-                      </div>
-                      <textarea {...register(`projects.${index}.descriptionRaw`)} placeholder="Project Description..." className="input-field h-32" />
-                      <button type="button" onClick={() => removeProj(index)} className="text-red-500 text-xs flex items-center"><Trash2 className="w-3 h-3 mr-1"/> Remove</button>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Experience */}
-                 <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold text-gray-700">Experience</h3>
-                    <button type="button" onClick={() => appendExp({ company: "", role: "", date: "", descriptionRaw: "" })} className="text-indigo-600 text-sm font-bold flex items-center"><Plus className="w-4 h-4 mr-1"/> Add</button>
-                  </div>
-                  {expFields.map((field, index) => (
-                    <div key={field.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200 space-y-2">
-                      <input {...register(`experience.${index}.company`)} placeholder="Company Name" className="input-field" />
-                      <input {...register(`experience.${index}.role`)} placeholder="Role" className="input-field" />
-                      <input {...register(`experience.${index}.date`)} placeholder="Duration" className="input-field" />
-                      <textarea {...register(`experience.${index}.descriptionRaw`)} placeholder="Responsibilities..." className="input-field h-32" />
-                      <button type="button" onClick={() => removeExp(index)} className="text-red-500 text-xs flex items-center"><Trash2 className="w-3 h-3 mr-1"/> Remove</button>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Skills */}
-                <div>
-                  <h3 className="font-semibold text-gray-700 mb-2">Technical Skills</h3>
-                  <textarea {...register("skillsRaw")} placeholder="Java, React, Node.js, SQL..." className="input-field h-16" />
-                </div>
-
-                {/* Achievements */}
-                <div>
-                   <h3 className="font-semibold text-gray-700 mb-2">Achievements</h3>
-                   <textarea {...register("achievementsRaw")} placeholder="Achievements..." className="input-field h-20" />
-                </div>
-
-                 <button type="submit" disabled={isLoading} className="w-full flex items-center justify-center py-3 px-6 border-transparent rounded-xl shadow-sm text-lg font-semibold  bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 bg-gradient-to-r from-indigo-500 to-purple-500 text-white cursor-pointer">
-                   {isLoading ? <Loader className="animate-spin mr-2"/> : <Wand2 className="mr-2"/>} 
-                   AI Polish
-                 </button>
-             </form>
-             {/* --- END Resume Settings --- */}
-        </div>
-
-        {/* --- RIGHT: DYNAMIC LIVE PREVIEW --- */}
-        <div className="glass-card-purple p-4 rounded-2xl flex flex-col items-center print:bg-white print:p-0 print:block">
-          <div className="w-full flex justify-between items-center mb-4 print:hidden">
-            <h2 className="text-xl font-semibold text-gray-700">Live Preview</h2>
-            <div className="flex gap-2">
-              <button 
-                onClick={handlePrint} 
-                className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 flex items-center shadow-sm"
-              >
-                <Printer className="w-4 h-4 mr-2"/> Print
-              </button>
-              <button 
-                onClick={handleDownloadPDF} 
-                className="print-button bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 flex items-center shadow-sm"
-              >
-                <Download className="w-4 h-4 mr-2"/> Download PDF
-              </button>
-            </div>
-          </div>
-
-          <div className="overflow-auto w-full flex justify-center print:overflow-visible print:w-full print:block print:m-0">
-            <div 
-                ref={resumeRef} 
-                style={{
-                    color: themeColor,
-                }}
-                className="print-content shadow-2xl w-[210mm] min-h-[297mm] origin-top scale-75 md:scale-90 lg:scale-100 transition-transform print:scale-100 print:shadow-none print:m-0 print:w-full bg-white"
-            >
-               {renderTemplate()}
-            </div>
-          </div>
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="w-10 h-10 text-purple-600 animate-spin" />
+          <p className="text-gray-600 font-medium">Loading your resume draft...</p>
         </div>
       </div>
-      
-      {/* Helper CSS & Font Loading */}
-      <style jsx global>{`
-        /* IMPORT GOOGLE FONTS FOR PREVIEW */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto&family=Lato&family=Montserrat&family=Open+Sans&family=Raleway&family=Caladea&family=Lora&family=Roboto+Slab&family=Playfair+Display&family=Merriweather&display=swap');
+    );
+  }
 
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
-      `}</style>
-      <style jsx>{`
-        .input-field {
-          width: 100%;
-          padding: 0.75rem;
-          border-radius: 0.5rem;
-          border: 1px solid #D1D5DB;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-        .input-field:focus {
-          border-color: #6366f1;
-          box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col pt-6 px-4 sm:px-6 lg:px-8 max-w-[1800px] mx-auto w-full">
+      
+      {/* Top Stepper and Actions Row */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 flex flex-col xl:flex-row xl:items-center justify-between gap-4 sticky top-6 z-40">
+        
+        {/* Wizard Header / Stepper */}
+        <div className="flex-1 flex space-x-2 overflow-x-auto pb-2 xl:pb-0 custom-scrollbar">
+          {STEPS.map((step, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentStep(idx)}
+              className={`cursor-pointer whitespace-nowrap flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+                currentStep === idx 
+                  ? 'bg-purple-600 text-white shadow-md' 
+                  : currentStep > idx 
+                    ? 'bg-purple-100 text-purple-700'
+                    : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50'
+              }`}
+            >
+              {currentStep > idx && <CheckCircle2 className="w-4 h-4 mr-1.5" />}
+              {step}
+            </button>
+          ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center space-x-3 shrink-0">
+          {/* Mobile view toggle */}
+          <button 
+            onClick={() => setViewMode(viewMode === 'edit' ? 'preview' : 'edit')}
+            className="cursor-pointer lg:hidden flex items-center px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200"
+          >
+            {viewMode === 'edit' ? <><Eye className="w-4 h-4 mr-1.5" /> Preview</> : <><Edit2 className="w-4 h-4 mr-1.5" /> Edit</>}
+          </button>
+          
+          <button 
+            onClick={handleSave}
+            disabled={isSaving}
+            className="cursor-pointer flex items-center px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors"
+          >
+            <Save className="w-4 h-4 mr-1.5" /> {isSaving ? 'Saving...' : 'Save Draft'}
+          </button>
+          <button 
+            onClick={handlePrint}
+            className="cursor-pointer flex items-center px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all"
+          >
+            <Download className="w-4 h-4 mr-1.5" /> Download PDF
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content Split View */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 overflow-hidden relative pb-6">
+        
+        {/* Left Side: Editor */}
+        <div className={`w-full lg:w-1/2 p-6 overflow-y-auto rounded-xl border border-gray-200 bg-gray-50/50 shadow-sm h-[calc(100vh-10rem)] custom-scrollbar ${viewMode === 'preview' ? 'hidden lg:block' : 'block'}`}>
+          <ResumeForm data={data} onChange={setData} onAiImprove={handleAiImprove} currentStep={currentStep} setCurrentStep={setCurrentStep} />
+        </div>
+
+        {/* Right Side: Live Preview */}
+        <div className={`w-full lg:w-1/2 bg-gray-200/80 p-4 rounded-xl border border-gray-200 shadow-inner overflow-y-auto flex justify-center h-[calc(100vh-10rem)] custom-scrollbar ${viewMode === 'edit' ? 'hidden lg:flex' : 'flex'}`}>
+          <div className="relative transition-all transform origin-top lg:scale-[0.6] xl:scale-[0.65] hover:scale-[0.62] xl:hover:scale-[0.67] duration-300 print:scale-100 h-fit">
+            <div className="shadow-2xl">
+              <ResumePreview data={data} ref={componentRef} templateId={templateId} />
+            </div>
+          </div>
+        </div>
+
+      </div>
+      
+      <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
+          height: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
           background: transparent; 
@@ -401,20 +195,15 @@ export default function ResumeBuilder() {
           background-color: rgba(156, 163, 175, 0.5); 
           border-radius: 20px; 
         }
-        @media print {
-          @page { size: auto; margin: 0mm; }
-          body { background-color: white; color: black; }
-          nav, header, footer { display: none !important; }
-          main { padding: 0 !important; margin: 0 !important; background: white !important; width: 100% !important; display: block !important; }
-          .print\:hidden { display: none !important; }
-          .grid { display: block !important; }
-          .bg-gray-100 { background-color: white !important; padding: 0 !important; }
-          .scale-75, .scale-90, .lg\:scale-100 { transform: none !important; }
-          .shadow-2xl { box-shadow: none !important; }
-          .print-content { margin: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; }
-          a { text-decoration: none !important; color: #1e40af !important; }
-        }
       `}</style>
     </div>
+  );
+}
+
+export default function BuilderPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><Loader2 className="w-10 h-10 text-purple-600 animate-spin" /></div>}>
+      <BuilderContent />
+    </Suspense>
   );
 }

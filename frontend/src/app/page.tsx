@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Upload, CheckCircle, Star, Wand2, FileText, Briefcase, GraduationCap,Sparkles } from 'lucide-react';
-
+import { useEffect } from 'react';
 
 /**
  * HomePage (Redesigned - Enhancv Style)
@@ -9,148 +9,163 @@ import { ArrowRight, Upload, CheckCircle, Star, Wand2, FileText, Briefcase, Grad
  * Uses standard CSS for font loading to avoid build resolution errors.
  */
 export default function HomePage() {
+  useEffect(() => {
+    // Make a call to the deployed backend to activate it when someone visits the site
+    const activateBackend = async () => {
+      try {
+        // Using the deployed Render backend URL directly to activate the service
+        await fetch('https://resume-analyzer-backend-s1yv.onrender.com');
+        console.log('Deployed backend activation request sent');
+      } catch (error) {
+        console.log('Deployed backend activation request failed:', error);
+      }
+    };
+
+    activateBackend();
+  }, []);
+
   return (
     <main className="min-h-screen font-sans overflow-hidden relative flex items-center justify-center">
-       {/* Load Rubik Font via Standard CSS */}
-       <style jsx global>{`
-         @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap');
-         
-         .font-rubik {
-           font-family: 'Rubik', sans-serif;
-         }
-         
-         /* Continuous flip animation */
-         .flip-card-inner {
-           animation: continuousFlip 8s infinite ease-in-out;
-         }
-         
-         @keyframes continuousFlip {
-           0%, 45% {
-             transform: rotateY(0deg);
-           }
-           55%, 95% {
-             transform: rotateY(180deg);
-           }
-           100% {
-             transform: rotateY(0deg);
-           }
-         }
-       `}</style>
+      {/* Load Rubik Font via Standard CSS */}
+      <style jsx global>{`
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500&display=swap');
+        
+        .font-rubik {
+          font-family: 'Rubik', sans-serif;
+        }
+        
+        /* Continuous flip animation */
+        .flip-card-inner {
+          animation: continuousFlip 8s infinite ease-in-out;
+        }
+        
+        @keyframes continuousFlip {
+          0%, 45% {
+            transform: rotateY(0deg);
+          }
+          55%, 95% {
+            transform: rotateY(180deg);
+          }
+          100% {
+            transform: rotateY(0deg);
+          }
+        }
+      `}</style>
 
-       {/* Background Elements */}
-       <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-          {/* Main gradient is handled by globals.css body::before */}
-       </div>
+      {/* Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+         {/* Main gradient is handled by globals.css body::before */}
+      </div>
 
-       {/* Content Wrapper - Centered Vertically */}
-       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      {/* Content Wrapper - Centered Vertically */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-            {/* --- LEFT COLUMN: Text Content & CTAs --- */}
-            <div className="text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0 z-10">
-               
-               {/* Main Headline with specific Rubik properties */}
-               <h1 
-                 className="font-rubik text-gray-900 tracking-normal"
-                 style={{
-                   fontSize: '58px',
-                   lineHeight: '76px',
-                   fontWeight: 500, // Medium
-                 }}
-               >
-                 Land Your <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-transparent bg-clip-text">Dream Job</span> with an <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">AI-Powered</span> Resume Review
-               </h1>
+           {/* --- LEFT COLUMN: Text Content & CTAs --- */}
+           <div className="text-center lg:text-left space-y-8 max-w-2xl mx-auto lg:mx-0 z-10">
+              
+              {/* Main Headline with specific Rubik properties */}
+              <h1 
+                className="font-rubik text-gray-900 tracking-normal"
+                style={{
+                  fontSize: '58px',
+                  lineHeight: '76px',
+                  fontWeight: 500, // Medium
+                }}
+              >
+                Land Your <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-transparent bg-clip-text">Dream Job</span> with an <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-transparent bg-clip-text">AI-Powered</span> Resume Review
+              </h1>
 
-               {/* Description Text with specific properties */}
-               <p 
-                 className="font-rubik text-gray-600 max-w-lg mx-auto lg:mx-0"
-                 style={{
-                    fontSize: '16px',
-                    lineHeight: '25.6px',
-                    fontWeight: 400, // Regular
-                 }}
-               >
-                 ATS Check, AI Writer, and One-Click Job Tailoring make your resume stand out to recruiters. Stop guessing and start getting hired.
-               </p>
+              {/* Description Text with specific properties */}
+              <p 
+                className="font-rubik text-gray-600 max-w-lg mx-auto lg:mx-0"
+                style={{
+                   fontSize: '16px',
+                   lineHeight: '25.6px',
+                   fontWeight: 400, // Regular
+                }}
+              >
+                ATS Check, AI Writer, and One-Click Job Tailoring make your resume stand out to recruiters. Stop guessing and start getting hired.
+              </p>
 
-               {/* Action Buttons */}
-               <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                 <a
-                   href="/builder"
-                   className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white text-lg font-bold rounded-xl shadow-xl hover:bg-indigo-700 hover:scale-105 transition-all duration-300 flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-500"
-                 >
-                   Build Your Resume
-                 </a>
-                 <a
-                   href="/upload"
-                   className="w-full sm:w-auto px-8 py-3 bg-white/80 backdrop-blur-sm border-2 border-gray-500 text-gray-800 text-lg font-bold rounded-xl shadow-sm hover:bg-white hover:border-gray-400 transition-all duration-300 flex items-center justify-center"
-                 >
-                   Get Your Resume Score
-                 </a>
-               </div>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                <a
+                  href="/builder"
+                  className="w-full sm:w-auto px-8 py-3 bg-indigo-600 text-white text-lg font-bold rounded-xl shadow-xl hover:bg-indigo-700 hover:scale-105 transition-all duration-300 flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-500"
+                >
+                  Build Your Resume
+                </a>
+                <a
+                  href="/upload"
+                  className="w-full sm:w-auto px-8 py-3 bg-white/80 backdrop-blur-sm border-2 border-gray-500 text-gray-800 text-lg font-bold rounded-xl shadow-sm hover:bg-white hover:border-gray-400 transition-all duration-300 flex items-center justify-center"
+                >
+                  Get Your Resume Score
+                </a>
+              </div>
 
-               {/* Reviews / Social Proof */}
-               <div className="pt-6 flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-600">
-                  <div className="flex text-green-500">
-                     <Star className="w-5 h-5 fill-current" />
-                     <Star className="w-5 h-5 fill-current" />
-                     <Star className="w-5 h-5 fill-current" />
-                     <Star className="w-5 h-5 fill-current" />
-                     <Star className="w-5 h-5 fill-current" />
-                  </div>
-                  <span className="font-medium">4,997 Reviews</span>
-                  <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                  <span>28,452 users landed interviews last month</span>
-               </div>
-            </div>
+              {/* Reviews / Social Proof */}
+              <div className="pt-6 flex items-center justify-center lg:justify-start gap-4 text-sm text-gray-600">
+                 <div className="flex text-green-500">
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                    <Star className="w-5 h-5 fill-current" />
+                 </div>
+                 <span className="font-medium">4,997 Reviews</span>
+                 <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+                 <span>28,452 users landed interviews last month</span>
+              </div>
+           </div>
 
-            {/* --- RIGHT COLUMN: Visuals --- */}
-            <div className="relative z-0 hidden lg:block perspective-1000 h-[600px] w-full max-w-lg mx-auto cursor-pointer">
-               {/* Decorative Glow */}
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
+           {/* --- RIGHT COLUMN: Visuals --- */}
+           <div className="relative z-0 hidden lg:block perspective-1000 h-[600px] w-full max-w-lg mx-auto cursor-pointer">
+              {/* Decorative Glow */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
 
-               {/* The Flip Container */}
-               <div className="flip-card-inner relative w-full h-full transition-transform duration-1000 transform-style-3d">
-                  
-                  {/* --- FRONT SIDE: The "Draft" Resume Image --- */}
-                  <div className="absolute w-full h-full backface-hidden">
-                     <div className="glass-card rounded-2xl p-2 shadow-2xl border border-white/40 h-full">
-                        <div className="bg-white/95 rounded-xl h-full w-full flex flex-col relative overflow-hidden shadow-inner opacity-90">
-                           <img 
-                             src="./heroImg1.webp"
-                             alt="Draft Resume" 
-                             className="w-full h-full object-cover rounded-xl"
-                           />
-                           {/* Hint Badge */}
-                           <div className="absolute bottom-8 right-8 bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3">
-                              <Wand2 className="w-5 h-5 text-indigo-600" />
-                              <div className="text-xs font-bold text-gray-800">Auto-Optimizing</div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
+              {/* The Flip Container */}
+              <div className="flip-card-inner relative w-full h-full transition-transform duration-1000 transform-style-3d">
+                 
+                 {/* --- FRONT SIDE: The "Draft" Resume Image --- */}
+                 <div className="absolute w-full h-full backface-hidden">
+                    <div className="glass-card rounded-2xl p-2 shadow-2xl border border-white/40 h-full">
+                       <div className="bg-white/95 rounded-xl h-full w-full flex flex-col relative overflow-hidden shadow-inner opacity-90">
+                          <img 
+                            src="./heroImg1.webp"
+                            alt="Draft Resume" 
+                            className="w-full h-full object-cover rounded-xl"
+                          />
+                          {/* Hint Badge */}
+                          <div className="absolute bottom-8 right-8 bg-white p-3 rounded-xl shadow-lg border border-gray-100 flex items-center gap-3">
+                             <Wand2 className="w-5 h-5 text-indigo-600" />
+                             <div className="text-xs font-bold text-gray-800">Auto-Optimizing</div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
 
-                  {/* --- BACK SIDE: The "Hired" Resume Image --- */}
-                  <div className="absolute w-full h-full backface-hidden rotate-y-180">
-                     <div className="glass-card rounded-2xl p-2 shadow-2xl border border-indigo-200 h-full">
-                        <div className="bg-gradient-to-br from-white to-indigo-50/50 rounded-xl h-full w-full flex flex-col relative overflow-hidden shadow-inner">
-                           <img 
-                             src="./heroImg3.webp" 
-                             alt="Hired Resume" 
-                             className="w-full h-full object-cover rounded-xl"
-                           />
-                           {/* Floating 'Optimized' Badge */}
-                           <div className="absolute bottom-8 right-8 bg-green-600 text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
-                              <Sparkles className="w-4 h-4" />
-                              <span className="text-sm font-bold">100% Optimized</span>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-          </div>
-       </div>
+                 {/* --- BACK SIDE: The "Hired" Resume Image --- */}
+                 <div className="absolute w-full h-full backface-hidden rotate-y-180">
+                    <div className="glass-card rounded-2xl p-2 shadow-2xl border border-indigo-200 h-full">
+                       <div className="bg-gradient-to-br from-white to-indigo-50/50 rounded-xl h-full w-full flex flex-col relative overflow-hidden shadow-inner">
+                          <img 
+                            src="./heroImg3.webp" 
+                            alt="Hired Resume" 
+                            className="w-full h-full object-cover rounded-xl"
+                          />
+                          {/* Floating 'Optimized' Badge */}
+                          <div className="absolute bottom-8 right-8 bg-green-600 text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
+                             <Sparkles className="w-4 h-4" />
+                             <span className="text-sm font-bold">100% Optimized</span>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+         </div>
+      </div>
     </main>
   );
 }

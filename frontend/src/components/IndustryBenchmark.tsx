@@ -79,7 +79,7 @@ export const IndustryBenchmark: React.FC<IndustryBenchmarkProps> = ({ analysis }
         </ResponsiveContainer>
       </div>
       
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className=" grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white/50 p-4 rounded-xl">
           <h4 className="font-semibold text-gray-800">Skills Match</h4>
           <div className="flex items-center mt-2">

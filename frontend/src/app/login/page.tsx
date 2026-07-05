@@ -8,6 +8,7 @@ import { LogIn, UserPlus, Loader } from 'lucide-react';
 // Corrected relative paths from src/app/login/
 import { loginUser, signupUser } from '../../utils/api';
 import { authSchema, AuthFormValues } from '../../types/auth';
+import Cookies from 'js-cookie';
 
 /**
  * LoginPage (with Glassmorphism)
@@ -28,8 +29,12 @@ export default function LoginPage() {
 
     try {
       const response = isLoginMode ? await loginUser(data) : await signupUser(data);
-      localStorage.setItem('authToken', response.token);
-      window.location.href = '/upload';
+      Cookies.set('authToken', response.token, { expires: 7 }); // Expires in 7 days
+      Cookies.set('userEmail', response.email || data.email, { expires: 7 });
+      if (response.name || data.name) {
+        Cookies.set('userName', response.name || data.name || '', { expires: 7 });
+      }
+      window.location.href = '/dashboard';
     } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'An unexpected error occurred.';
       setError(errorMessage);
@@ -52,6 +57,24 @@ export default function LoginPage() {
             </p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {!isLoginMode && (
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="name"
+                    type="text"
+                    autoComplete="name"
+                    {...register('name')}
+                    className="w-full px-3 py-2 bg-white/60 border border-white/50 rounded-md shadow-sm placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="John Doe"
+                  />
+                  {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name.message}</p>}
+                </div>
+              </div>
+            )}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email Address

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { AnalysisResult, FormValues, AnalyzeApiResponse } from '../types';
 import { AuthFormValues, AuthResponse } from '../types/auth';
 import { HistoryResponse } from '../types/history';
+import Cookies from 'js-cookie';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
 
@@ -17,7 +18,7 @@ export const analyzeResumeApi = async (data: FormValues): Promise<AnalyzeApiResp
     formData.append('jobDescription', data.jobDescription);
   }
 
-  const token = localStorage.getItem('authToken');
+  const token = Cookies.get('authToken');
   
   const config = {
     headers: {
@@ -35,10 +36,17 @@ export const analyzeResumeApi = async (data: FormValues): Promise<AnalyzeApiResp
  * @description Generates a cover letter using the AI.
  */
 export const generateCoverLetterApi = async (resumeText: string, jobDescription: string): Promise<{ coverLetter: string }> => {
+  const token = Cookies.get('authToken');
+  const config = {
+    headers: {
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
+  };
+  
   const response = await axios.post(`${API_BASE_URL}/resume/generate-cover-letter`, {
     resumeText,
     jobDescription,
-  });
+  }, config);
   return response.data;
 };
 
@@ -55,12 +63,30 @@ export const loginUser = async (credentials: AuthFormValues): Promise<AuthRespon
   return response.data;
 };
 
+export const getMeApi = async (): Promise<AuthResponse> => {
+  const token = Cookies.get('authToken');
+  if (!token) throw new Error('No token');
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(`${API_BASE_URL}/auth/me`, config);
+  return response.data;
+};
+
 export const getHistory = async (): Promise<HistoryResponse[]> => {
-  const token = localStorage.getItem('authToken');
+  const token = Cookies.get('authToken');
   if (!token) {
     throw new Error('No authentication token found. Please log in.');
   }
   const config = { headers: { Authorization: `Bearer ${token}` } };
   const response = await axios.get(`${API_BASE_URL}/resume/history`, config);
+  return response.data;
+};
+
+export const getDraft = async (): Promise<any> => {
+  const token = Cookies.get('authToken');
+  if (!token) {
+    throw new Error('No authentication token found. Please log in.');
+  }
+  const config = { headers: { Authorization: `Bearer ${token}` } };
+  const response = await axios.get(`${API_BASE_URL}/resume/draft`, config);
   return response.data;
 };

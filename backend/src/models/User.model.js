@@ -8,6 +8,11 @@ const bcrypt = require('bcryptjs');
 
 // 1. Define the User Schema
 const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Name is required.'],
+    trim: true,
+  },
   email: {
     type: String,
     required: [true, 'Email is required.'],
@@ -21,7 +26,14 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Password is required.'],
     minlength: [6, 'Password must be at least 6 characters long.'],
   },
-  // We can add more fields here later, like username or analysisHistory
+  credits: {
+    type: Number,
+    default: 5,
+  },
+  isPro: {
+    type: Boolean,
+    default: false,
+  }
 }, {
   // Adds createdAt and updatedAt timestamps to each document
   timestamps: true,

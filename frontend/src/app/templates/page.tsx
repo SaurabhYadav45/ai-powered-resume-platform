@@ -24,7 +24,7 @@ export default function TemplatesPage() {
     ? templates 
     : templates.filter(t => t.category === activeCategory);
 
-  const categories: TemplateCategory[] = ['All', 'Modern', 'Traditional', 'Simple', 'Creative'];
+  const categories: TemplateCategory[] = ['All', 'Modern', 'Simple', 'Creative'];
 
   const handleUseTemplate = (templateId: string) => {
     router.push(`/builder?template=${templateId}`);
@@ -57,7 +57,7 @@ export default function TemplatesPage() {
                <div className="lg:w-1/2 text-center lg:text-left">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50/80 backdrop-blur border border-indigo-100 text-indigo-700 text-sm font-semibold mb-6 shadow-sm">
                     <LayoutTemplate className="w-4 h-4" />
-                    <span>Library of 50+ Designs</span>
+                    <span>Library of Designs Template</span>
                   </div>
 
                   {/* UPDATED: Heading with specific typography */}
