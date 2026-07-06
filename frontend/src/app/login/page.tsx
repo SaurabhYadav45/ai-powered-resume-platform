@@ -134,7 +134,7 @@ export default function LoginPage() {
                 setIsLoginMode(!isLoginMode);
                 setError(null);
               }}
-              className="text-sm text-indigo-600 hover:text-indigo-500 "
+              className="text-sm bg-indigo-100 px-3 py-1 rounded-full text-indigo-600 hover:text-indigo-500 cursor-pointer"
             >
               {isLoginMode ? 'Need an account? Sign Up' : 'Already have an account? Sign In'}
             </button>
