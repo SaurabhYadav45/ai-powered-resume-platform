@@ -16,19 +16,39 @@ A full-stack web application that leverages generative AI to provide instant, de
 | <img width="100%" alt="Login Paget" src="https://github.com/user-attachments/assets/d472588f-e34d-46ce-9871-e1d113a00ab4?text=Result+Dashboard" /> | <img width="100%" alt="upload Page" src="https://github.com/user-attachments/assets/b5d3cc41-e6cb-4f7d-b913-eaa8ec6d9994" /> |
 ---
 
-## Features
+## 🚀 Comprehensive Features & Functionality
 
-- **Instant AI Feedback:** Get a comprehensive analysis of your resume's content, formatting, and keyword optimization powered by the Google Gemini API.  
-- **Job Description Matching:** Paste a job description to receive a "Skills Match" score, identifying how well your resume is tailored for a specific role.  
-- **Actionable Suggestions:** Receive concrete, actionable advice on how to improve your resume, from quantifying achievements to using stronger action verbs.  
-- **Secure User Accounts:** Full authentication system allows users to sign up and log in to save their analysis history.  
-- **Track Your Progress:** Logged-in users can view a history of their past analyses, making it easy to see how their resume improves over time.  
-- **Downloadable PDF Reports:** Save a professional-looking PDF of any analysis report for offline reference.  
-- **Modern Resume Builder:** Create professional resumes with customizable templates, themes, and fonts.  
-- **Multiple Templates:** Choose from various professionally designed resume templates (Modern, Traditional, Simple, Creative).  
-- **Real-time Preview:** See changes to your resume in real-time as you build it.  
-- **Export to PDF:** Download your created resume as a high-quality PDF document.  
-- **Modern & Responsive UI:** A clean, intuitive, and mobile-friendly interface built with Next.js and Tailwind CSS.  
+### 📊 Comprehensive AI-Powered Analysis Dashboard
+Get an extremely detailed, visually rich breakdown of your resume's performance, featuring:
+- **Overall Assessment & Recommendations**: A quick pulse check (e.g., "79% Good") with high-level advice on where to focus improvements.
+- **Detailed Scoring Metrics**: Fine-grained, color-coded scores across multiple dimensions including **ATS Score**, **Impact**, **Action Verbs**, **Relevance**, **Length**, **Metrics Usage**, and **Readability**.
+- **Keyword Analysis**: Visual charts showing the frequency of critical technical and soft skills (e.g., React, AWS, Next.js) found in your resume.
+- **Industry Benchmark Comparison**: Compare your Skills Match, ATS Score, and Impact Score side-by-side against industry averages to see exactly where you stand.
+- **Missing Critical Skills**: Instantly identifies high-value skills required by your target job description that are completely missing from your resume.
+- **Formatting Feedback**: Actionable advice on section alignment, font consistency, and ATS-friendly formatting structure.
+- **Improvement Suggestions**: Concrete, bite-sized recommendations to enhance bullet points, tailor your summary, and optimize keywords.
+- **ATS Optimization Tips**: Specific, contextual tips directly related to the target job description (e.g., "Incorporate 'AWS' from job description").
+- **Red Flags to Fix**: Automatically detects cliché buzzwords or unquantified bullet points and provides immediate, inline suggestions (e.g., 💡 "Add how many active users or features built").
+
+### 📝 AI Resume Builder & Templates
+- **Multiple Professionally Designed Templates**: Choose from a variety of visually striking, ATS-optimized templates (Modern, Traditional, Simple, Creative) to perfectly match your industry and style.
+- **Smart Resume Builder**: Generate a professional resume from scratch. Input raw details, and the AI will craft structured, punchy content.
+- **AI Text Improvement**: Automatically rewrite and enhance individual bullet points or professional summaries to be more impactful using strong action verbs.
+- **Real-time Preview**: See changes to your resume in real-time as you build it. 
+- **Draft Auto-Saving**: Never lose your progress. Your resume drafts are securely auto-saved to your account while you edit.
+- **Export to High-Quality PDF**: Download your polished, newly built resume as a clean, properly formatted PDF.
+
+### ✉️ Cover Letter Generation
+- **One-Click Tailored Cover Letters**: Instantly generate a highly personalized, compelling cover letter that perfectly bridges your resume's achievements with the target job description.
+
+### 🔐 User Dashboard & Credit System
+- **Secure Authentication**: Full JWT-based authentication system allowing users to safely sign up and log in.
+- **History Tracking**: Automatically saves all your past resume analyses so you can track improvements over time and revisit old feedback.
+- **Credit & Pro System**: Free users start with 5 complimentary credits for analysis. A scalable Pro tier offers extended/unlimited access.
+
+### 💻 Modern & Responsive UI
+- **Premium Glassmorphism Design**: A beautiful, user-friendly interface with sleek glassmorphism effects, smooth micro-animations, and dynamic visual data representation (Skill charts, Score Cards).
+- **Mobile-Friendly**: Fully responsive and optimized for seamless use on any device, built with Next.js and Tailwind CSS.
 
 ---
 
@@ -53,7 +73,7 @@ Follow these steps to get a local copy up and running.
 
 - Node.js (v22 or later)  
 - A free MongoDB Atlas account  
-- A Google Gemini API Key  
+- An OpenAI API Key
 
 ### Backend Setup
 
